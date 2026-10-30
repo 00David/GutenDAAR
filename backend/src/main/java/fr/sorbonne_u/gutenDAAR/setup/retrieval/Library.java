@@ -1,6 +1,7 @@
-package fr.sorbonne_u.gutenDAAR.setup;
+package fr.sorbonne_u.gutenDAAR.setup.retrieval;
 
 import fr.sorbonne_u.gutenDAAR.Settings;
+import fr.sorbonne_u.gutenDAAR.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,9 +17,9 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
- * Utility class for retrieving the texts (=book contents) from the mirror.
+ * Utility class for retrieving the books from the mirror.
  *
- * <p>Its {@link #retrieveTreatedText(String)} method is in particular exposed.</p>
+ * <p>Its {@link #retrieveTreatedText(int)} method is in particular exposed.</p>
  */
 public class Library {
 
@@ -29,50 +30,50 @@ public class Library {
 
     /** UNICODE_CHARACTER_CLASS so that \s also matches non-breaking spaces */
     protected static final Pattern WHITESPACES = Pattern.compile("\\s+", Pattern.UNICODE_CHARACTER_CLASS);
-    /** The treated text content starts after the line accepting this pattern. */
+    /** The treated book text content starts after the line accepting this pattern. */
     protected static final Pattern START_TEXT = Pattern.compile("^\\*\\*\\* START");
-    /** The treated text content stops before the line accepting this pattern. */
+    /** The treated book text content stops before the line accepting this pattern. */
     protected static final Pattern END_TEXT = Pattern.compile("^\\*\\*\\* END");
 
     /**
-     * Retrieve the text from the mirror, and treat it for getting the exact text words.
-     * @param pathWithinMirror          The path within the mirror, starting with {@code /}, leading to the text.
-     * @return                          The treated text from the mirror.
-     * @throws IOException              If an I/O error occurs while retrieving the text from the mirror.
-     * @throws InterruptedException     If an interruption occurs while retrieving the text from the mirror.
+     * Retrieve the book text from the mirror, and treat it for getting the exact book words.
+     * @param bookId                    The unique Gutenberg book id.
+     * @return                          The treated book text from the mirror.
+     * @throws IOException              If an I/O error occurs while retrieving the book from the mirror.
+     * @throws InterruptedException     If an interruption occurs while retrieving the book from the mirror.
      */
-    public static List<String> retrieveTreatedText(String pathWithinMirror) throws IOException, InterruptedException {
-        String rawText = retrieveText(pathWithinMirror);
+    public static List<String> retrieveTreatedText(int bookId) throws IOException, InterruptedException {
+        String rawText = retrieveText(bookId);
         return treatRetrievedText(rawText);
     }
 
     /**
-     * Retrieve the text from the mirror, having the path: {@link Settings#MIRROR_URL} + {@code pathWithinMirror}.
-     * @param pathWithinMirror          The path within the mirror, from which the text is retrieved.
-     * @return                          The text from the mirror
-     * @throws IOException              If an I/O error occurs while retrieving the text from the mirror.
-     * @throws InterruptedException     If an interruption occurs while retrieving the text from the mirror.
+     * Retrieve the book text from the mirror.
+     * @param bookId                    The unique Gutenberg book id.
+     * @return                          The book text from the mirror
+     * @throws IOException              If an I/O error occurs while retrieving the book from the mirror.
+     * @throws InterruptedException     If an interruption occurs while retrieving the book from the mirror.
      */
-    protected static String retrieveText(String pathWithinMirror) throws IOException, InterruptedException {
-        URI mirrorURI = Settings.MIRROR_URL.resolve(pathWithinMirror);
-        HttpRequest request = HttpRequest.newBuilder(mirrorURI)
+    protected static String retrieveText(int bookId) throws IOException, InterruptedException {
+        URI textURI = Utils.textURIWithinMirror(bookId);
+        HttpRequest request = HttpRequest.newBuilder(textURI)
                 .header("User-Agent", Settings.USER_AGENT)
                 .timeout(Duration.ofSeconds(Settings.RETRIEVE_TIMEOUT_SECONDS))
                 .GET()
                 .build();
         HttpResponse<String> response = Settings.CLIENT.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
         if (response.statusCode() != 200) {
-            throw new IOException("Could not download " + mirrorURI.getPath() + ": " + response.statusCode());
+            throw new IOException("Could not download " + textURI.getPath() + ": " + response.statusCode());
         }
 
-        LOG.debug("Retrieved the raw text from {}.", mirrorURI.getPath());
+        LOG.debug("Retrieved the raw book text from {}.", textURI.getPath());
         return response.body();
     }
 
     /**
-     * Treat the given raw text for getting the exact text words.
-     * @param rawText       The text got after retrieval from the mirror.
-     * @return              The exact text words.
+     * Treat the given raw book text for getting the exact book words.
+     * @param rawText       The book text got after retrieval from the mirror.
+     * @return              The exact book words.
      */
     protected static List<String> treatRetrievedText(String rawText) {
         List<String> lines = rawText.strip().lines().toList();
@@ -100,7 +101,7 @@ public class Library {
             }
         }
 
-        LOG.debug("Treated the raw text.");
+        LOG.debug("Treated the raw book text.");
         return words;
     }
 }

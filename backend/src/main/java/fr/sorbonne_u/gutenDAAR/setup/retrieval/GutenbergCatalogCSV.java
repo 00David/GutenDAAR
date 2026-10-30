@@ -1,7 +1,7 @@
-package fr.sorbonne_u.gutenDAAR.setup;
+package fr.sorbonne_u.gutenDAAR.setup.retrieval;
 
 import fr.sorbonne_u.gutenDAAR.Settings;
-import fr.sorbonne_u.gutenDAAR.setup.GutenDAARCatalogCSV.GutenDAAREntry;
+import fr.sorbonne_u.gutenDAAR.setup.retrieval.GutenDAARCatalogCSV.GutenDAAREntry;
 import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Utility class for retrieving the CSV file containing Gutenberg text metadata.
+ * Utility class for retrieving the CSV file containing Gutenberg book metadata.
  *
  * <p>Its {@link #retrieve()} method is in particular exposed.</p>
  */
@@ -34,26 +34,26 @@ public class GutenbergCatalogCSV {
 
     /**
      * An entry of the Gutenberg CSV catalog file (a line).
-     * @param id                    The Gutenberg id of the text.
-     * @param type                  The text type, for instance {@code Text}.
-     * @param issued                The text date of publication, formatted as {@code YYYY-MM-DD}.
-     * @param title                 The text title.
-     * @param language              The text language ISO code, for instance {@code en}.
-     * @param authors               The text authors.
-     * @param subjects              The text subjects.
-     * @param locc                  The Library of Congress Classification text code.
-     * @param bookshelves           The text bookshelves.
+     * @param id                    The Gutenberg id of the book.
+     * @param type                  The book type, for instance {@code Text}.
+     * @param issued                The book date of publication, formatted as {@code YYYY-MM-DD}.
+     * @param title                 The book title.
+     * @param language              The book language ISO code, for instance {@code en}.
+     * @param authors               The book authors.
+     * @param subjects              The book subjects.
+     * @param locc                  The Library of Congress Classification book code.
+     * @param bookshelves           The book bookshelves.
      */
     public record GutenbergEntry(int id, String type, String issued, String title,
                                  String language, String authors, String subjects, String locc, String bookshelves) {
 
         /**
          * Return the equivalent of the current {@link GutenbergEntry}, as a {@link GutenDAAREntry},
-         * or {@code null} if the entry isn't a text or an I/O exception occurs while retrieving
-         * the treated text corresponding to the entry.
+         * or {@code null} if the entry isn't a book or an I/O exception occurs while retrieving
+         * the treated book corresponding to the entry.
          *
          * @return                             The equivalent as a {@link GutenDAAREntry}, or {@code null}.
-         * @throws InterruptedException        If an error occurs while retrieving the treated text corresponding to the entry.
+         * @throws InterruptedException        If an error occurs while retrieving the treated book corresponding to the entry.
          */
         public GutenDAAREntry toGutenDAAREntry() throws InterruptedException {
             if (!type.equals("Text")) {
@@ -62,12 +62,10 @@ public class GutenbergCatalogCSV {
             }
 
             try {
-                String pathWithinMirror = idToPathWithinMirror(id);
-                List<String> words = Library.retrieveTreatedText(pathWithinMirror);
+                List<String> words = Library.retrieveTreatedText(id);
                 LOG.debug("Converted GutenbergEntry to GutenbergCatalogCSV for book {}", id);
                 return new GutenDAAREntry(
                         id,
-                        pathWithinMirror,
                         title,
                         authors.isEmpty() ? null : authors,
                         language,
@@ -77,16 +75,6 @@ public class GutenbergCatalogCSV {
                 LOG.warn("Book {} unavailable: {}", id, e.getMessage());
                 return null;
             }
-        }
-
-        /**
-         * Convert a text id to its path within a Gutenberg mirror, i.e. an id of {@code 15}
-         * is converted to {@code 15/pg15.txt}.
-         * @param id    A text Gutenberg id.
-         * @return      Its path within a Gutenberg mirror.
-         */
-        private static String idToPathWithinMirror(int id) {
-            return id + "/pg" + id + ".txt";
         }
     }
 
@@ -135,7 +123,7 @@ public class GutenbergCatalogCSV {
                         r.get(HEADER[7]),
                         r.get(HEADER[8])));
             } catch (NumberFormatException e) {
-                // not well-formed line: ignored
+                LOG.warn("Ignored not well-formed record {} of the Gutenberg catalog: {}", r.getRecordNumber(), e.getMessage());
             }
         }
         LOG.debug("Parsed Gutenberg catalog, containing {} entries.", entries.size());
