@@ -1,106 +1,106 @@
-Id,PathWithinMirror,Title,Authors,Language,WordCount
-66,66/pg66.txt,The Dawn of Amateur Radio in the U.K. and Greece: A Personal View,"Joly, Norman F.",en,31090
-93,93/pg93.txt,"Tom Sawyer, Detective","Twain, Mark, 1835-1910",en,23263
-95,95/pg95.txt,The prisoner of Zenda,"Hope, Anthony, 1863-1933",en,53716
-103,103/pg103.txt,Around the World in Eighty Days,"Verne, Jules, 1828-1905; Towle, George M. (George Makepeace), 1841-1893 [Translator]",en,63334
-105,105/pg105.txt,Persuasion,"Austen, Jane, 1775-1817",en,83335
-133,133/pg133.txt,The Damnation of Theron Ware,"Frederic, Harold, 1856-1898",en,118275
-160,160/pg160.txt,"The Awakening, and Selected Short Stories","Chopin, Kate, 1850-1904",en,64028
-219,219/pg219.txt,Heart of Darkness,"Conrad, Joseph, 1857-1924",en,37917
-220,220/pg220.txt,The Secret Sharer,"Conrad, Joseph, 1857-1924",en,16548
-233,233/pg233.txt,Sister Carrie: A Novel,"Dreiser, Theodore, 1871-1945",en,156474
-265,265/pg265.txt,The Life and Death of Cormac the Skald,"Collingwood, W. G. (William Gershom), 1854-1932 [Translator]; Jón Stefánsson, 1862- [Translator]",en,18139
-290,290/pg290.txt,"The Stark Munro Letters
+Id,Title,Authors,Language,WordCount
+66,The Dawn of Amateur Radio in the U.K. and Greece: A Personal View,"Joly, Norman F.",en,31090
+93,"Tom Sawyer, Detective","Twain, Mark, 1835-1910",en,23263
+95,The prisoner of Zenda,"Hope, Anthony, 1863-1933",en,53716
+103,Around the World in Eighty Days,"Verne, Jules, 1828-1905; Towle, George M. (George Makepeace), 1841-1893 [Translator]",en,63334
+105,Persuasion,"Austen, Jane, 1775-1817",en,83335
+133,The Damnation of Theron Ware,"Frederic, Harold, 1856-1898",en,118275
+160,"The Awakening, and Selected Short Stories","Chopin, Kate, 1850-1904",en,64028
+219,Heart of Darkness,"Conrad, Joseph, 1857-1924",en,37917
+220,The Secret Sharer,"Conrad, Joseph, 1857-1924",en,16548
+233,Sister Carrie: A Novel,"Dreiser, Theodore, 1871-1945",en,156474
+265,The Life and Death of Cormac the Skald,"Collingwood, W. G. (William Gershom), 1854-1932 [Translator]; Jón Stefánsson, 1862- [Translator]",en,18139
+290,"The Stark Munro Letters
 Being series of twelve letters written by J. Stark Munro, M.B., to his friend and former fellow-student, Herbert Swanborough, of Lowell, Massachusetts, during the years 1881-1884","Doyle, Arthur Conan, 1859-1930",en,77470
-312,312/pg312.txt,Young Adventure: A Book of Poems,"Benét, Stephen Vincent, 1898-1943",en,14436
-317,317/pg317.txt,"The Culprit Fay, and Other Poems","Drake, Joseph Rodman, 1795-1820",en,11692
-330,330/pg330.txt,Where There's a Will,"Rinehart, Mary Roberts, 1876-1958",en,65478
-353,353/pg353.txt,"In Flanders Fields, and Other Poems","McCrae, John, 1872-1918; Macphail, Andrew, 1864-1938 [Contributor]",en,28980
-364,364/pg364.txt,The Mad King,"Burroughs, Edgar Rice, 1875-1950",en,93073
-378,378/pg378.txt,The White Knight: Tirant Lo Blanc,"Martorell, Joanot, -1468; Galba, Martí Joan de, -1490; Rudder, Robert S. [Translator]",en,161482
-382,382/pg382.txt,Edinburgh: Picturesque Notes,"Stevenson, Robert Louis, 1850-1894",en,21762
-450,450/pg450.txt,Susan Lenox: Her Fall and Rise,"Phillips, David Graham, 1867-1911",en,299264
-457,457/pg457.txt,The Price She Paid,"Phillips, David Graham, 1867-1911",en,96699
-460,460/pg460.txt,The Dawn of a To-morrow,"Burnett, Frances Hodgson, 1849-1924; Yohn, F. C. (Frederick Coffay), 1875-1933 [Illustrator]",en,18448
-466,466/pg466.txt,The Gaming Table: Its Votaries and Victims. Volume 1 (of 2),"Steinmetz, Andrew, 1816-1877",en,85290
-474,474/pg474.txt,"How to Tell Stories to Children, and Some Stories to Tell","Bryant, Sara Cone, 1873-1956",en,55945
-475,475/pg475.txt,"In Darkest England, and the Way Out","Booth, William, 1829-1912",en,125621
-476,476/pg476.txt,"James Nasmyth, Engineer: An Autobiography","Nasmyth, James, 1808-1890; Smiles, Samuel, 1812-1904 [Editor]",en,145000
-554,554/pg554.txt,The Contrast,"Tyler, Royall, 1757-1826; McKee, Thomas Jefferson, 1840-1899 [Author of introduction, etc.]",en,21854
-560,560/pg560.txt,Mr. Standfast,"Buchan, John, 1875-1940",en,128241
-563,563/pg563.txt,"The Planet Mars and Its Inhabitants, a Psychic Revelation","Kennon, J. L.",en,22110
-652,652/pg652.txt,"Rasselas, Prince of Abyssinia","Johnson, Samuel, 1709-1784",en,37997
-655,655/pg655.txt,Life and Letters of Robert Browning,"Orr, Sutherland, Mrs., 1828-1903; Browning, Robert, 1812-1889",en,114521
-671,671/pg671.txt,"Phil, the Fiddler","Alger, Horatio, Jr., 1832-1899",en,42578
-703,703/pg703.txt,Lucasta,"Lovelace, Richard, 1618-1658",en,63542
-743,743/pg743.txt,"Thoughts on Man, His Nature, Productions and Discoveries
+312,Young Adventure: A Book of Poems,"Benét, Stephen Vincent, 1898-1943",en,14436
+317,"The Culprit Fay, and Other Poems","Drake, Joseph Rodman, 1795-1820",en,11692
+330,Where There's a Will,"Rinehart, Mary Roberts, 1876-1958",en,65478
+353,"In Flanders Fields, and Other Poems","McCrae, John, 1872-1918; Macphail, Andrew, 1864-1938 [Contributor]",en,28980
+364,The Mad King,"Burroughs, Edgar Rice, 1875-1950",en,93073
+378,The White Knight: Tirant Lo Blanc,"Martorell, Joanot, -1468; Galba, Martí Joan de, -1490; Rudder, Robert S. [Translator]",en,161482
+382,Edinburgh: Picturesque Notes,"Stevenson, Robert Louis, 1850-1894",en,21762
+450,Susan Lenox: Her Fall and Rise,"Phillips, David Graham, 1867-1911",en,299264
+457,The Price She Paid,"Phillips, David Graham, 1867-1911",en,96699
+460,The Dawn of a To-morrow,"Burnett, Frances Hodgson, 1849-1924; Yohn, F. C. (Frederick Coffay), 1875-1933 [Illustrator]",en,18448
+466,The Gaming Table: Its Votaries and Victims. Volume 1 (of 2),"Steinmetz, Andrew, 1816-1877",en,85290
+474,"How to Tell Stories to Children, and Some Stories to Tell","Bryant, Sara Cone, 1873-1956",en,55945
+475,"In Darkest England, and the Way Out","Booth, William, 1829-1912",en,125621
+476,"James Nasmyth, Engineer: An Autobiography","Nasmyth, James, 1808-1890; Smiles, Samuel, 1812-1904 [Editor]",en,145000
+554,The Contrast,"Tyler, Royall, 1757-1826; McKee, Thomas Jefferson, 1840-1899 [Author of introduction, etc.]",en,21854
+560,Mr. Standfast,"Buchan, John, 1875-1940",en,128241
+563,"The Planet Mars and Its Inhabitants, a Psychic Revelation","Kennon, J. L.",en,22110
+652,"Rasselas, Prince of Abyssinia","Johnson, Samuel, 1709-1784",en,37997
+655,Life and Letters of Robert Browning,"Orr, Sutherland, Mrs., 1828-1903; Browning, Robert, 1812-1889",en,114521
+671,"Phil, the Fiddler","Alger, Horatio, Jr., 1832-1899",en,42578
+703,Lucasta,"Lovelace, Richard, 1618-1658",en,63542
+743,"Thoughts on Man, His Nature, Productions and Discoveries
 Interspersed with Some Particulars Respecting the Author","Godwin, William, 1756-1836",en,116130
-754,754/pg754.txt,The Story of Mankind,"Van Loon, Hendrik Willem, 1882-1944",en,129220
-767,767/pg767.txt,Agnes Grey,"Brontë, Anne, 1820-1849",en,67831
-776,776/pg776.txt,Hermione and Her Little Group of Serious Thinkers,"Marquis, Don, 1878-1937",en,31698
-789,789/pg789.txt,The Gathering of Brother Hilarius,"Fairless, Michael, 1869-1901",en,27541
-812,812/pg812.txt,"Catalan's Constant to 1,500,000 Places",,en,19394
-821,821/pg821.txt,Dombey and Son,"Dickens, Charles, 1812-1870",en,354937
-838,838/pg838.txt,"Jasmin: Barber, Poet, Philanthropist","Smiles, Samuel, 1812-1904",en,81455
-860,860/pg860.txt,Baby Mine,"Mayo, Margaret, 1882-1951",en,47293
-863,863/pg863.txt,The Mysterious Affair at Styles,"Christie, Agatha, 1890-1976",en,56535
-901,901/pg901.txt,The Jew of Malta,"Marlowe, Christopher, 1564-1593",en,25829
-902,902/pg902.txt,"The Happy Prince, and Other Tales","Wilde, Oscar, 1854-1900",en,16372
-1619,1619/pg1619.txt,La Celestina,"Rojas, Fernando de, -1541",es,109865
-2146,2146/pg2146.txt,Egmont,"Goethe, Johann Wolfgang von, 1749-1832",de,25645
-2999,2999/pg2999.txt,A l'ombre des jeunes filles en fleurs — Deuxième partie,"Proust, Marcel, 1871-1922",fr,64432
-3062,3062/pg3062.txt,Römische Geschichte — Buch 3,"Mommsen, Theodor, 1817-1903",de,170897
-3456,3456/pg3456.txt,Le tour du monde en quatre-vingts jours,"Verne, Jules, 1828-1905",fr,75497
-3645,3645/pg3645.txt,L'Étourdi ou les contre-temps,"Molière, 1622-1673",fr,22080
-4501,4501/pg4501.txt,"Gockel, Hinkel und Gackeleia","Brentano, Clemens, 1778-1842",de,61580
-5258,5258/pg5258.txt,Ainsi Parlait Zarathoustra,"Nietzsche, Friedrich Wilhelm, 1844-1900",fr,104112
-5781,5781/pg5781.txt,Le grand Meaulnes,"Alain-Fournier, 1886-1914",fr,64319
-5880,5880/pg5880.txt,Reina Valera New Testament of the Bible 1865,"Reina, Casiodoro de, 1520?-1594 [Translator]; Valera, Cipriano de, 1532?-1625 [Translator]",es,61777
-6319,6319/pg6319.txt,Bric-à-brac,"Dumas, Alexandre, 1802-1870",fr,48546
-6343,6343/pg6343.txt,"Kritik der reinen Vernunft
+754,The Story of Mankind,"Van Loon, Hendrik Willem, 1882-1944",en,129220
+767,Agnes Grey,"Brontë, Anne, 1820-1849",en,67831
+776,Hermione and Her Little Group of Serious Thinkers,"Marquis, Don, 1878-1937",en,31698
+789,The Gathering of Brother Hilarius,"Fairless, Michael, 1869-1901",en,27541
+812,"Catalan's Constant to 1,500,000 Places",,en,19394
+821,Dombey and Son,"Dickens, Charles, 1812-1870",en,354937
+838,"Jasmin: Barber, Poet, Philanthropist","Smiles, Samuel, 1812-1904",en,81455
+860,Baby Mine,"Mayo, Margaret, 1882-1951",en,47293
+863,The Mysterious Affair at Styles,"Christie, Agatha, 1890-1976",en,56535
+901,The Jew of Malta,"Marlowe, Christopher, 1564-1593",en,25829
+902,"The Happy Prince, and Other Tales","Wilde, Oscar, 1854-1900",en,16372
+1619,La Celestina,"Rojas, Fernando de, -1541",es,109865
+2146,Egmont,"Goethe, Johann Wolfgang von, 1749-1832",de,25645
+2999,A l'ombre des jeunes filles en fleurs — Deuxième partie,"Proust, Marcel, 1871-1922",fr,64432
+3062,Römische Geschichte — Buch 3,"Mommsen, Theodor, 1817-1903",de,170897
+3456,Le tour du monde en quatre-vingts jours,"Verne, Jules, 1828-1905",fr,75497
+3645,L'Étourdi ou les contre-temps,"Molière, 1622-1673",fr,22080
+4501,"Gockel, Hinkel und Gackeleia","Brentano, Clemens, 1778-1842",de,61580
+5258,Ainsi Parlait Zarathoustra,"Nietzsche, Friedrich Wilhelm, 1844-1900",fr,104112
+5781,Le grand Meaulnes,"Alain-Fournier, 1886-1914",fr,64319
+5880,Reina Valera New Testament of the Bible 1865,"Reina, Casiodoro de, 1520?-1594 [Translator]; Valera, Cipriano de, 1532?-1625 [Translator]",es,61777
+6319,Bric-à-brac,"Dumas, Alexandre, 1802-1870",fr,48546
+6343,"Kritik der reinen Vernunft
 Zweite hin und wieder verbesserte Auflage (1787)","Kant, Immanuel, 1724-1804",de,184917
-6833,6833/pg6833.txt,"Der Waldbruder, ein Pendant zu Werthers Leiden","Lenz, Jakob Michael Reinhold, 1751-1792",de,10291
-6975,6975/pg6975.txt,Macbeth,"Shakespeare, William, 1564-1616; Tieck, Dorothea, 1799-1841 [Translator]",de,17344
-7292,7292/pg7292.txt,Leben und Tod des Königs Johann,"Shakespeare, William, 1564-1616; Wieland, Christoph Martin, 1733-1813 [Translator]",de,23357
-7770,7770/pg7770.txt,Les quarante-cinq — Tome 1,"Dumas, Alexandre, 1802-1870; Maquet, Auguste, 1813-1888",fr,81906
-7933,7933/pg7933.txt,König Heinrich der vierte. Der Erste Theil,"Shakespeare, William, 1564-1616; Wieland, Christoph Martin, 1733-1813 [Translator]",de,21909
-8698,8698/pg8698.txt,O Livro de Cesario Verde,"Verde, Cesário, 1855-1886; Silva Pinto, Antonio da, 1848-1911 [Compiler]",pt,14362
-8738,8738/pg8738.txt,Fasti,"Ovid, 44 BCE-18?; Keightley, Thomas, 1789-1872 [Annotator]",la,97833
-8804,8804/pg8804.txt,Drie Vertellingen,"Flaubert, Gustave, 1821-1880; Koenen, Marie, 1879-1959 [Translator]",nl,32613
-8864,8864/pg8864.txt,Mémoires secrets de Fournier l'Américain,"Fournier, Claude, 1745-1825; Aulard, F.-A. (François-Alphonse), 1849-1928 [Annotator]",fr,34681
-9065,9065/pg9065.txt,Beatrice,"Heyse, Paul, 1830-1914",de,20150
-9335,9335/pg9335.txt,Fabeln und Erzählungen,"Gellert, Christian Fürchtegott, 1715-1769",de,32631
-9639,9639/pg9639.txt,La dame de Monsoreau — Tome 3.,"Dumas, Alexandre, 1802-1870; Maquet, Auguste, 1813-1888",fr,81606
-9645,9645/pg9645.txt,Quatrevingt-Treize,"Hugo, Victor, 1802-1885",fr,112930
-9654,9654/pg9654.txt,Lendas e Narrativas (Tomo I),"Herculano, Alexandre, 1810-1877",pt,55785
-9894,9894/pg9894.txt,"Histoire de la Révolution française, Tome 02","Thiers, Adolphe, 1797-1877",fr,105157
-9977,9977/pg9977.txt,Berlin — Panorama einer Weltstadt,"Gutzkow, Karl, 1811-1878",de,44198
-10055,10055/pg10055.txt,Hamburgische Dramaturgie,"Lessing, Gotthold Ephraim, 1729-1781",de,151071
-10113,10113/pg10113.txt,"De mannen van '80 aan het woord
+6833,"Der Waldbruder, ein Pendant zu Werthers Leiden","Lenz, Jakob Michael Reinhold, 1751-1792",de,10291
+6975,Macbeth,"Shakespeare, William, 1564-1616; Tieck, Dorothea, 1799-1841 [Translator]",de,17344
+7292,Leben und Tod des Königs Johann,"Shakespeare, William, 1564-1616; Wieland, Christoph Martin, 1733-1813 [Translator]",de,23357
+7770,Les quarante-cinq — Tome 1,"Dumas, Alexandre, 1802-1870; Maquet, Auguste, 1813-1888",fr,81906
+7933,König Heinrich der vierte. Der Erste Theil,"Shakespeare, William, 1564-1616; Wieland, Christoph Martin, 1733-1813 [Translator]",de,21909
+8698,O Livro de Cesario Verde,"Verde, Cesário, 1855-1886; Silva Pinto, Antonio da, 1848-1911 [Compiler]",pt,14362
+8738,Fasti,"Ovid, 44 BCE-18?; Keightley, Thomas, 1789-1872 [Annotator]",la,97833
+8804,Drie Vertellingen,"Flaubert, Gustave, 1821-1880; Koenen, Marie, 1879-1959 [Translator]",nl,32613
+8864,Mémoires secrets de Fournier l'Américain,"Fournier, Claude, 1745-1825; Aulard, F.-A. (François-Alphonse), 1849-1928 [Annotator]",fr,34681
+9065,Beatrice,"Heyse, Paul, 1830-1914",de,20150
+9335,Fabeln und Erzählungen,"Gellert, Christian Fürchtegott, 1715-1769",de,32631
+9639,La dame de Monsoreau — Tome 3.,"Dumas, Alexandre, 1802-1870; Maquet, Auguste, 1813-1888",fr,81606
+9645,Quatrevingt-Treize,"Hugo, Victor, 1802-1885",fr,112930
+9654,Lendas e Narrativas (Tomo I),"Herculano, Alexandre, 1810-1877",pt,55785
+9894,"Histoire de la Révolution française, Tome 02","Thiers, Adolphe, 1797-1877",fr,105157
+9977,Berlin — Panorama einer Weltstadt,"Gutzkow, Karl, 1811-1878",de,44198
+10055,Hamburgische Dramaturgie,"Lessing, Gotthold Ephraim, 1729-1781",de,151071
+10113,"De mannen van '80 aan het woord
 Een onderzoek vaar eenige beginselen van de ""Nieuwe-Gids""-school.","D'Oliveira, E. (Elias), 1886-1944",nl,37084
-10218,10218/pg10218.txt,Stauder,"Brandt, G. N. (Gudmund Nyeland), 1878-1945",da,31927
-10334,10334/pg10334.txt,Van 't  viooltje dat weten wilde,"Marx-Koning, Marie, 1864-1926",nl,34159
-10346,10346/pg10346.txt,C'Était ainsi...,"Buysse, Cyriel, 1859-1932",fr,67043
-10481,10481/pg10481.txt,Rautatie,"Aho, Juhani, 1861-1921",fi,23611
-10506,10506/pg10506.txt,"Romance de lobos, comedia barbara","Valle-Inclán, Ramón del, 1866-1936",es,23007
-11206,11206/pg11206.txt,Compendio di Chimica Fisiologica,"Cominelli, A. (Alfredo)",it,18588
-11492,11492/pg11492.txt,Il Tenente dei Lancieri: Romanzo,"Rovetta, Gerolamo, 1854-1910",it,33064
-12008,12008/pg12008.txt,Geerten Basse,"Monteyne, Lode, 1886-1959",nl,19562
-12113,12113/pg12113.txt,Eine vornehme Frau,"Heiberg, Hermann, 1840-1910",de,58835
-12339,12339/pg12339.txt,Hendes Højhed,"Bang, Herman, 1857-1912",da,17098
-12459,12459/pg12459.txt,Contes et poésies de Prosper Jourdan: 1854-1866,"Jourdan, Prosper, 1840-1866",fr,33356
-12499,12499/pg12499.txt,Förbannelse över de otrogna!,"Heller, Frank, 1886-1947",sv,23291
-12796,12796/pg12796.txt,Lea; Margareta,"Kivi, Aleksis, 1834-1872",fi,12673
-12822,12822/pg12822.txt,De Edda,"Berding, Frans [Adapter]",nl,45326
-13164,13164/pg13164.txt,Murtovarkaus; Roinilan talossa,"Canth, Minna, 1844-1897",fi,30724
-13165,13165/pg13165.txt,Papin perhe; Hän on Sysmästä; Spiritistinen istunto,"Canth, Minna, 1844-1897",fi,31930
-13187,13187/pg13187.txt,"Dialogue aux enfers entre Machiavel et Montesquieu
+10218,Stauder,"Brandt, G. N. (Gudmund Nyeland), 1878-1945",da,31927
+10334,Van 't  viooltje dat weten wilde,"Marx-Koning, Marie, 1864-1926",nl,34159
+10346,C'Était ainsi...,"Buysse, Cyriel, 1859-1932",fr,67043
+10481,Rautatie,"Aho, Juhani, 1861-1921",fi,23611
+10506,"Romance de lobos, comedia barbara","Valle-Inclán, Ramón del, 1866-1936",es,23007
+11206,Compendio di Chimica Fisiologica,"Cominelli, A. (Alfredo)",it,18588
+11492,Il Tenente dei Lancieri: Romanzo,"Rovetta, Gerolamo, 1854-1910",it,33064
+12008,Geerten Basse,"Monteyne, Lode, 1886-1959",nl,19562
+12113,Eine vornehme Frau,"Heiberg, Hermann, 1840-1910",de,58835
+12339,Hendes Højhed,"Bang, Herman, 1857-1912",da,17098
+12459,Contes et poésies de Prosper Jourdan: 1854-1866,"Jourdan, Prosper, 1840-1866",fr,33356
+12499,Förbannelse över de otrogna!,"Heller, Frank, 1886-1947",sv,23291
+12796,Lea; Margareta,"Kivi, Aleksis, 1834-1872",fi,12673
+12822,De Edda,"Berding, Frans [Adapter]",nl,45326
+13164,Murtovarkaus; Roinilan talossa,"Canth, Minna, 1844-1897",fi,30724
+13165,Papin perhe; Hän on Sysmästä; Spiritistinen istunto,"Canth, Minna, 1844-1897",fi,31930
+13187,"Dialogue aux enfers entre Machiavel et Montesquieu
 ou la politique de Machiavel au XIXe Siècle par un contemporain","Joly, Maurice, 1831-1878",fr,60685
-13456,13456/pg13456.txt,Les deux nigauds,"Ségur, Sophie, comtesse de, 1799-1874",fr,49825
-13492,13492/pg13492.txt,Viajes por Europa y América,"Petano y Mazariegos, Gorgonio",es,55569
-13562,13562/pg13562.txt,Ghislaine,"Malot, Hector, 1830-1907",fr,87706
-13734,13734/pg13734.txt,"Jim Harrison, boxeur","Doyle, Arthur Conan, 1859-1930",fr,98290
-13771,13771/pg13771.txt,"Aventures de Monsieur Pickwick, Vol. I","Dickens, Charles, 1812-1870; Grolier, Pierre [Translator]",fr,151590
-13874,13874/pg13874.txt,Rauhan erakko,"Aho, Juhani, 1861-1921",fi,23102
-14038,14038/pg14038.txt,"La Daniella, Vol. II.","Sand, George, 1804-1876",fr,94362
-14050,14050/pg14050.txt,Daniel Hjort: Sorgespel i fem akter med fyra tablåer,"Wecksell, J. J. (Josef Julius), 1838-1907",sv,16866
+13456,Les deux nigauds,"Ségur, Sophie, comtesse de, 1799-1874",fr,49825
+13492,Viajes por Europa y América,"Petano y Mazariegos, Gorgonio",es,55569
+13562,Ghislaine,"Malot, Hector, 1830-1907",fr,87706
+13734,"Jim Harrison, boxeur","Doyle, Arthur Conan, 1859-1930",fr,98290
+13771,"Aventures de Monsieur Pickwick, Vol. I","Dickens, Charles, 1812-1870; Grolier, Pierre [Translator]",fr,151590
+13874,Rauhan erakko,"Aho, Juhani, 1861-1921",fi,23102
+14038,"La Daniella, Vol. II.","Sand, George, 1804-1876",fr,94362
+14050,Daniel Hjort: Sorgespel i fem akter med fyra tablåer,"Wecksell, J. J. (Josef Julius), 1838-1907",sv,16866

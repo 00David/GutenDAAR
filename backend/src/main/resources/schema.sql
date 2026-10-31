@@ -8,13 +8,15 @@ CREATE TABLE IF NOT EXISTS books (
     centrality    DOUBLE PRECISION
 );
 
--- Inverted index
+-- Forwarded index
 CREATE TABLE IF NOT EXISTS postings (
     book_id      INT  NOT NULL REFERENCES books(id) ON DELETE CASCADE,
     term         TEXT NOT NULL,
     occurrences  INT  NOT NULL,
     PRIMARY KEY (book_id, term) -- book → term
 );
+-- Inverted index (dynamically created once the postings table has been filled)
+-- CREATE INDEX idx_postings_term ON postings(term); -- term → book
 
 -- Jaccard graph (symmetrical)
 CREATE TABLE IF NOT EXISTS jaccard_edges (

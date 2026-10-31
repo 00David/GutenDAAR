@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS jaccard_edges;
+DROP TABLE IF EXISTS postings;
+DROP TABLE IF EXISTS books;
