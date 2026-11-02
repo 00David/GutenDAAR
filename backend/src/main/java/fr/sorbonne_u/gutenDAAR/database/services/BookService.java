@@ -52,7 +52,7 @@ public class BookService {
                 LOG.debug("Saved books and cleared persistence context after {} iterations.", i);
             }
         }
-        LOG.info("Inserted {} books.", books.size());
+        LOG.debug("Inserted {} books.", books.size());
     }
 
     /**
