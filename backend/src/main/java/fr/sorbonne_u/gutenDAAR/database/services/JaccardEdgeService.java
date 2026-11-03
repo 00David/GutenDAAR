@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,6 +65,16 @@ public class JaccardEdgeService {
             }
         }
         LOG.info("Inserted {} jaccard edges.", edges.size());
+    }
+
+    /**
+     * Find the edges leaving the given books, i.e. all their neighbours in the jaccard graph
+     * (edges are stored in both directions).
+     * @param bookIds   The books whose neighbours are wanted.
+     * @return          The edges whose first book is one of the given books.
+     */
+    public List<JaccardEdge> findEdgesFrom(Collection<Integer> bookIds) {
+        return jeRepository.findByBookAIn(bookIds);
     }
 
     /**

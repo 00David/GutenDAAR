@@ -1,0 +1,96 @@
+/* ---------- home (nothing searched yet) */
+.home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100dvh;
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 0 1rem 8rem;
+}
+
+.homeTitle {
+  font-size: var(--text-7xl);
+  line-height: 1;
+  text-align: center;
+}
+
+.tagline {
+  margin: 0.5rem 0 2rem;
+  text-align: center;
+  color: var(--gray-600);
+}
+
+/* ---------- results */
+.main {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.stats {
+  margin-bottom: 0.75rem;
+  font-size: var(--text-sm);
+  color: var(--gray-600);
+}
+
+.total {
+  font-weight: 500;
+  color: var(--gray-900);
+}
+
+.words {
+  font-family: var(--font-mono);
+  color: var(--gray-800);
+}
+
+/* phone: results, then recommendations under them.
+   minmax(0, 1fr) and min-width: 0 stop long titles from making the page wider than the screen. */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+}
+
+.results,
+.recommendations {
+  min-width: 0;
+}
+
+.empty {
+  padding: 1.5rem 0;
+  color: var(--gray-600);
+}
+
+.query {
+  font-family: var(--font-mono);
+}
+
+.list > li + li {
+  border-top: 1px solid var(--gray-200);
+}
+
+/* phone: a horizontal row of cards to swipe */
+.cards {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0 -0.5rem;
+  padding-bottom: 0.5rem;
+  overflow-x: auto;
+}
+
+/* desktop: results on 2/3, recommendations in a column on the right */
+@media (min-width: 64rem) {
+  .layout {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .results {
+    grid-column: span 2;
+  }
+
+  .cards {
+    flex-direction: column;
+    overflow: visible;
+  }
+}

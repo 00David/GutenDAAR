@@ -1,0 +1,112 @@
+.main {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.back {
+  font-size: var(--text-sm);
+  color: var(--accent-hover);
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+/* ---------- book details. Phone: cover above the text */
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.cover {
+  flex-shrink: 0;
+  align-self: center;
+  width: 8rem;
+  height: 12rem;
+}
+
+.info {
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--gray-900);
+}
+
+.subtitle {
+  margin-top: 0.25rem;
+  font-size: var(--text-lg);
+  color: var(--gray-600);
+}
+
+.author {
+  margin-top: 0.5rem;
+  color: var(--gray-800);
+}
+
+/* two columns: label, value */
+.facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 1rem;
+  margin-top: 1rem;
+  font-size: var(--text-sm);
+}
+
+.facts dt {
+  color: var(--gray-500);
+}
+
+.read {
+  display: inline-block;
+  margin-top: 1.25rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-lg);
+  background: var(--accent);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: white;
+}
+
+.read:hover {
+  background: var(--accent-hover);
+}
+
+/* ---------- similar books: 2 columns on phone, 3 on tablet, 5 on desktop */
+.similar {
+  margin-top: 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem;
+  margin: 0 -0.5rem;
+}
+
+@media (min-width: 40rem) {
+  .details {
+    flex-direction: row;
+  }
+
+  .cover {
+    align-self: flex-start;
+  }
+
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}

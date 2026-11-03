@@ -1,0 +1,52 @@
+.card {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.75rem;
+  width: 10rem;
+  padding: 0.5rem;
+  border-radius: var(--radius-lg);
+}
+
+.card:hover {
+  background: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.cover {
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 4rem;
+}
+
+.text {
+  min-width: 0;
+}
+
+/* at most 2 lines, then "…" */
+.title {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.375;
+  color: var(--gray-900);
+}
+
+.author {
+  margin-top: 0.125rem;
+  overflow: hidden;
+  font-size: var(--text-xs);
+  color: var(--gray-500);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* desktop: the cards are stacked in a column, they take its width */
+@media (min-width: 64rem) {
+  .card {
+    width: auto;
+  }
+}
