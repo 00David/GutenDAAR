@@ -13,6 +13,7 @@ import org.springframework.data.domain.Persistable;
 @Entity
 @Table(name = "books")
 public class Book implements Persistable<Integer> {
+
     /** Not a column: true until the book has been saved or loaded from the database. */
     @Transient
     private boolean isNew = true;
@@ -28,22 +29,29 @@ public class Book implements Persistable<Integer> {
     protected String language;
     /** The book word count. */
     protected int wordCount;
-    /** The book computed centrality. Can be {@code null} if not yet computed. */
-    protected Double centrality;
+    /** The book computed closeness centrality. Can be {@code null} if not yet computed. */
+    protected Double closenessCentrality;
+    /** The book computed betweenness centrality. Can be {@code null} if not yet computed. */
+    protected Double betweennessCentrality;
+    /** The book computed pagerank (centrality). Can be {@code null} if not yet computed. */
+    protected Double pagerankCentrality;
 
     protected Book() {}
 
     public Book(int id, String title, String author, String language, int wordCount) {
-        this(id, title, author, language, wordCount, null);
+        this(id, title, author, language, wordCount, null, null, null);
     }
 
-    protected Book(int id, String title, String author, String language, int wordCount, Double centrality) {
+    protected Book(int id, String title, String author, String language, int wordCount,
+                   Double closenessCentrality, Double betweennessCentrality, Double pagerankCentrality) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.language = language;
         this.wordCount = wordCount;
-        this.centrality = centrality;
+        this.closenessCentrality = closenessCentrality;
+        this.betweennessCentrality = betweennessCentrality;
+        this.pagerankCentrality = pagerankCentrality;
     }
 
     @Override
@@ -67,12 +75,28 @@ public class Book implements Persistable<Integer> {
         return wordCount;
     }
 
-    public Double getCentrality() {
-        return centrality;
+    public Double getClosenessCentrality() {
+        return closenessCentrality;
     }
 
-    public void setCentrality(double centrality) {
-        this.centrality = centrality;
+    public Double getBetweennessCentrality() {
+        return betweennessCentrality;
+    }
+
+    public Double getPagerankCentrality() {
+        return pagerankCentrality;
+    }
+
+    public void setClosenessCentrality(double closenessCentrality) {
+        this.closenessCentrality = closenessCentrality;
+    }
+
+    public void setBetweennessCentrality(double betweennessCentrality) {
+        this.betweennessCentrality = betweennessCentrality;
+    }
+
+    public void setPagerankCentrality(double pagerankCentrality) {
+        this.pagerankCentrality = pagerankCentrality;
     }
 
     @Override

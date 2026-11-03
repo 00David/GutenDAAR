@@ -210,8 +210,9 @@ public class DataSetup implements ApplicationRunner {
         for (GutenDAAREntry book: catalog) {
             int id = book.id();
             int indexInMatrix = bookIdInMatrix.bookIdToMatrixIndex().get(id);
-            double centrality = ranks[indexInMatrix];
-            bookService.updateCentrality(id, centrality);
+            double pagerankCentrality = ranks[indexInMatrix];
+            // TODO: pass computed closeness and betweenness centralities
+            bookService.updateCentrality(id, null, null, pagerankCentrality);
         }
     }
 }

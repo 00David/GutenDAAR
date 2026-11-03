@@ -61,14 +61,19 @@ public class BookService {
 
     /**
      * Update an already inserted book having the given id.
-     * @param id            The book unique Gutenberg id.
-     * @param centrality    The computed book centrality.
+     * @param id                        The book unique Gutenberg id.
+     * @param closenessCentrality       The closeness computed book centrality.
+     * @param betweennessCentrality     The betweenness computed book centrality.
+     * @param pagerankCentrality        The pagerank computed book centrality.
      */
     @Transactional
-    public void updateCentrality(int id, double centrality) {
+    public void updateCentrality(int id, Double closenessCentrality, Double betweennessCentrality, double pagerankCentrality) {
         Book b = bookRepository.getReferenceById(id);
-        b.setCentrality(centrality); // implicitly updates the book in DB
-        LOG.debug("Updated centrality of {} with new value: {}.", id, centrality);
+        // TODO: also set centralities for closeness and betweenness + pass these parameters as double
+        b.setPagerankCentrality(pagerankCentrality);
+        // setters implicitly update the book in DB
+        // TODO: also log for closeness and betweenness centralities
+        LOG.debug("Updated centrality of {} with new value: {}.", id, pagerankCentrality);
     }
 
     /**

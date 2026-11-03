@@ -9,8 +9,29 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface BookRepository extends JpaRepository<Book, Integer> {
 
     /**
+     * Indicate if at least one book has no computed closeness centrality yet.
+     * @return      true if a book has a {@code null} centrality.
+     */
+    boolean existsByClosenessCentralityIsNull();
+
+    /**
+     * Indicate if at least one book has no computed betweenness centrality yet.
+     * @return      true if a book has a {@code null} centrality.
+     */
+    boolean existsByBetweennessCentralityIsNull();
+
+    /**
+     * Indicate if at least one book has no computed pagerank centrality yet.
+     * @return      true if a book has a {@code null} centrality.
+     */
+    boolean existsByPagerankCentralityIsNull();
+
+    /**
      * Indicate if at least one book has no computed centrality yet.
      * @return      true if a book has a {@code null} centrality.
      */
-    boolean existsByCentralityIsNull();
+    default boolean existsByCentralityIsNull() {
+        // TODO: also consider closeness and betweenness when implemented
+        return existsByPagerankCentralityIsNull(); // || existsByClosenessCentralityIsNull() || existsByBetweennessCentralityIsNull()
+    }
 }
