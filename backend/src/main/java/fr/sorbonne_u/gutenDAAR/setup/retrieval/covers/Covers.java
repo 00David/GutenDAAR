@@ -1,4 +1,4 @@
-package fr.sorbonne_u.gutenDAAR.setup.retrieval;
+package fr.sorbonne_u.gutenDAAR.setup.retrieval.covers;
 
 import fr.sorbonne_u.gutenDAAR.Settings;
 import fr.sorbonne_u.gutenDAAR.Utils;
@@ -16,7 +16,7 @@ import java.time.Duration;
 /**
  * Utility class for retrieving the book covers from the mirror.
  *
- * <p>Its {@link #retrieveSmallCover(int)} method is in particular exposed.</p>
+ * <p>Its {@link #retrieve(int, CoverType, boolean)} method is in particular exposed.</p>
  */
 public class Covers {
 
@@ -26,21 +26,40 @@ public class Covers {
     protected static final Logger LOG = LoggerFactory.getLogger(Covers.class);
 
     /**
-     * Retrieve the small book cover, either by loading it from the disk if locally present,
-     * or after retrieving it from the mirror.
+     * Retrieve the given book cover, either by:
+     * <ul>
+     *     <li>Loading it from the disk.</li>
+     *     <li>Retrieving it from the mirror.</li>
+     *     <li>Loading a fallback placeholder from the disk, if mentioned.</li>
+     * </ul>
+     * @param bookId                    The unique Gutenberg book id.
+     * @param coverType                 The cover type to retrieve.
+     * @param allowPlaceholder          Allow the fallback placeholder to be used in case of need.
      * @return                          The raw bytes of the JPG book cover.
      * @throws IOException              If an error occurs while retrieving the file.
      * @throws InterruptedException     If an interruption occurs while retrieving the file.
      */
-    public static byte[] retrieveSmallCover(int bookId) throws IOException, InterruptedException {
-        Path smallCoverPath = Utils.smallCoverPath(bookId);
-        byte[] cover;
-        if (Files.exists(smallCoverPath) && Files.isRegularFile(smallCoverPath)) {
-            return load(smallCoverPath);
-        } else {
-            cover = retrieve(Utils.smallCoverURIWithinMirror(bookId));
-            save(cover, smallCoverPath);
+    public static byte[] retrieve(int bookId, CoverType coverType, boolean allowPlaceholder) throws IOException, InterruptedException {
+        Path coverPath = coverType.coverPath(bookId);
+        if (Files.exists(coverPath) && Files.isRegularFile(coverPath)) {
+            return load(coverPath);
         }
+
+        byte[] cover;
+        try {
+            cover = retrieve(coverType.coverURIWithinMirror(bookId));
+        } catch (IOException e) {
+            // If the cover cannot be retrieved (retrieve throws an IOException),
+            if (allowPlaceholder) {
+                // Then the placeholder is used, if mentioned
+                Path coverPlaceholderPath = coverType.coverPlaceholderPath();
+                return load(coverPlaceholderPath);
+            } else {
+                // Otherwise, the exception is propagated
+                throw e;
+            }
+        }
+        save(cover, coverPath);
         return cover;
     }
 

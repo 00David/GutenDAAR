@@ -14,8 +14,10 @@ import fr.sorbonne_u.gutenDAAR.setup.centrality.PageRank;
 import fr.sorbonne_u.gutenDAAR.setup.retrieval.GutenDAARCatalogCSV;
 import fr.sorbonne_u.gutenDAAR.setup.retrieval.GutenDAARCatalogCSV.GutenDAAREntry;
 
-import fr.sorbonne_u.gutenDAAR.setup.retrieval.Covers;
+import fr.sorbonne_u.gutenDAAR.setup.retrieval.covers.CoverType;
+import fr.sorbonne_u.gutenDAAR.setup.retrieval.covers.Covers;
 import fr.sorbonne_u.gutenDAAR.setup.retrieval.Library;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
@@ -54,7 +56,7 @@ public class DataSetup implements ApplicationRunner {
      * @throws Exception                If an error occurs during the setup.
      */
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(@NonNull ApplicationArguments args) throws Exception {
         if (bookService.isSetupDone()) {
             LOG.info("Database already set up: skipping the setup.");
             return;
@@ -66,7 +68,7 @@ public class DataSetup implements ApplicationRunner {
         List<GutenDAAREntry> catalog = GutenDAARCatalogCSV.retrieve();
         LOG.info("1/5 - Catalog ready: {} book references.", catalog.size());
 
-        initBooksWithoutCentrality(catalog);
+        initBooksWithoutCentrality(catalog, Settings.COVER_TYPE);
         LOG.info("2/5 - books table partially ready (without centrality computed).");
 
         initPostings(catalog);
@@ -85,9 +87,10 @@ public class DataSetup implements ApplicationRunner {
      * Retrieve the small covers, and insert the books without their centrality.
      * A book without retrievable cover is still inserted.
      * @param catalog                   The entries of the books to insert.
+     * @param coverType                 The book cover type to retrieve for each book.
      * @throws InterruptedException     If an interruption occurs while retrieving a cover.
      */
-    protected void initBooksWithoutCentrality(List<GutenDAAREntry> catalog) throws InterruptedException {
+    protected void initBooksWithoutCentrality(List<GutenDAAREntry> catalog, CoverType coverType) throws InterruptedException {
         List<Book> books = new ArrayList<>();
 
         // For each book
@@ -96,14 +99,15 @@ public class DataSetup implements ApplicationRunner {
             books.add(new Book(book.id(), book.title(), book.authors(), book.language(), book.wordCount()));
 
             try {
-                // Retrieve its small cover if not already present (and save it on the disk)
-                Covers.retrieveSmallCover(book.id());
+                // Retrieve its original cover if not already present (and save it on the disk)
+                Covers.retrieve(book.id(), coverType, false);
             } catch (IOException e) {
                 LOG.warn("No cover for book {}: {}", book.id(), e.getMessage());
             }
 
             if (books.size() % Settings.PROGRESS_BAR_STEP == 0) {
-                LOG.atInfo().addArgument(() -> Utils.progressBar(books.size(), catalog.size())).log("Retrieving small book covers {}");
+                LOG.atInfo().addArgument(() -> coverType)
+                        .addArgument(() -> Utils.progressBar(books.size(), catalog.size())).log("Retrieving {} book covers {}");
             }
         }
         bookService.insert(books);
@@ -161,10 +165,9 @@ public class DataSetup implements ApplicationRunner {
         List<JaccardEdge> edges = new ArrayList<>();
 
         // Load the terms only once per book
-        List<Set<String>> terms = new ArrayList<>();
-        for (GutenDAAREntry book: catalog) {
-            terms.add(postingService.getBookTerms(book.id()));
-        }
+        List<Set<String>> terms = catalog.stream()
+                .map(e -> postingService.getBookTerms(e.id()))
+                .toList();
 
         // For each book pair, in a single direction, compute the jaccard distance between them
         for (int aI = 0; aI < catalog.size(); aI++) {
