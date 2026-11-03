@@ -6,12 +6,21 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Set;
 
 /**
  * Repository corresponding to the {@code postings} table.
  */
 public interface PostingRepository extends JpaRepository<Posting, Posting.PostingId> {
+
+    /**
+     * Find the postings of a term, i.e. the books containing it with their occurrences.
+     * Uses the inverted index {@code idx_postings_term}.
+     * @param term      The term to look up.
+     * @return          The postings of the term, in no particular order.
+     */
+    List<Posting> findByTerm(String term);
 
     /**
      * Find the terms of a book, using the primary key {@code (book_id, term)} as forward index.

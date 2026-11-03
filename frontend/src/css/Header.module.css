@@ -1,0 +1,30 @@
+.header {
+  border-bottom: 1px solid var(--gray-200);
+  background: rgb(255 255 255 / 0.9);
+  backdrop-filter: blur(8px);
+}
+
+/* phone: logo above the search bar */
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+}
+
+.logo {
+  flex-shrink: 0;
+  padding-top: 0.375rem;
+  font-size: var(--text-6xl);
+}
+
+/* tablet and desktop: logo left of the search bar */
+@media (min-width: 40rem) {
+  .inner {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+}

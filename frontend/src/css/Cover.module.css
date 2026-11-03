@@ -1,0 +1,19 @@
+/* the size comes from the parent, through the className prop */
+.image {
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  box-shadow: var(--shadow-sm);
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border-radius: var(--radius-sm);
+  background: var(--gray-200);
+  font-size: 10px;
+  line-height: 1.25;
+  text-align: center;
+  color: var(--gray-500);
+}

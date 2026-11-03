@@ -1,12 +1,14 @@
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react()],
   server: {
+    // listen on the LAN too, so the dev server can be opened from a phone
+    host: true,
     watch: { usePolling: true },
-    proxy: { '/api': 'http://localhost:8080' },
+    // dev only: forward /api to the backend (override with API_PROXY_TARGET=http://<ip>:8080)
+    proxy: { '/api': process.env.API_PROXY_TARGET ?? 'http://localhost:8080' },
   },
   build: {
     outDir: '../backend/src/main/resources/static',

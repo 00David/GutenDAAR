@@ -50,4 +50,15 @@ public final class Settings {
     /** Rows per JDBC batch: must be the same as {@code spring.jpa.properties.hibernate.jdbc.batch_size}. */
     public static final int BATCH_SIZE = 1000;
 
+    /* API PART */
+
+    /** Default number of results per page. */
+    public static final int DEFAULT_PAGE_SIZE = 20;
+    /** Maximum number of results per page. */
+    public static final int MAX_PAGE_SIZE = 100;
+    /** Number of top-ranked results whose graph neighbours are recommended. */
+    public static final int RECOMMENDATION_SOURCES = 5;
+    /** Maximum number of recommendations returned with a search. */
+    public static final int MAX_RECOMMENDATIONS = 10;
+
 }

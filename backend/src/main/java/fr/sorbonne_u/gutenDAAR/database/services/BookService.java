@@ -9,7 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Service allowing to interact with {@link BookRepository}.
@@ -81,5 +85,27 @@ public class BookService {
      */
     public boolean isEmpty() {
         return bookRepository.count() == 0;
+    }
+
+    /**
+     * Find a book by its Gutenberg id.
+     * @param id    The unique Gutenberg book id.
+     * @return      The book, or an empty optional if it is not in the database.
+     */
+    public Optional<Book> findById(int id) {
+        return bookRepository.findById(id);
+    }
+
+    /**
+     * Find several books by their Gutenberg ids, indexed by id.
+     * @param ids   The unique Gutenberg book ids.
+     * @return      The found books by id (unknown ids are absent).
+     */
+    public Map<Integer, Book> findAllById(Collection<Integer> ids) {
+        Map<Integer, Book> books = new HashMap<>();
+        for (Book book : bookRepository.findAllById(ids)) {
+            books.put(book.getId(), book);
+        }
+        return books;
     }
 }

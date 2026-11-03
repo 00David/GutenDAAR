@@ -1,0 +1,11 @@
+/* the size comes from the parent (font-size is inherited) */
+.logo {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--gray-900);
+}
+
+.accent {
+  color: var(--accent);
+}
