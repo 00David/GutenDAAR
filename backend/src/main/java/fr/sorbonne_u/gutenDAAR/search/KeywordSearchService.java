@@ -1,5 +1,6 @@
 package fr.sorbonne_u.gutenDAAR.search;
 
+import fr.sorbonne_u.gutenDAAR.Utils;
 import fr.sorbonne_u.gutenDAAR.database.entities.Posting;
 import fr.sorbonne_u.gutenDAAR.database.services.PostingService;
 import org.springframework.stereotype.Service;
@@ -7,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Keyword search: the books whose index table contains the keyword.
@@ -30,26 +30,12 @@ public class KeywordSearchService {
     }
 
     /**
-     * Normalize a query keyword like the indexed terms, otherwise "Whale" would never match "whale".
-     *
-     * <p>Must stay identical to the tokenization of the books
-     * ({@code Library.treatRetrievedText}: lowercase only, for now). To be shared with it once the
-     * tokenization is fixed (bug_to_fix.md, B1).</p>
-     *
-     * @param keyword   The keyword typed by the user.
-     * @return          The normalized keyword.
-     */
-    public static String normalize(String keyword) {
-        return keyword.strip().toLowerCase(Locale.ROOT);
-    }
-
-    /**
      * Search the books containing a keyword.
      * @param keyword   The keyword, a single word.
      * @return          The matched word and every book containing it, ranked by occurrences.
      */
     public SearchResult search(String keyword) {
-        String term = normalize(keyword);
+        String term = Utils.normalize(keyword);
         List<Posting> postings = postingService.findByTerm(term);
         if (postings.isEmpty()) {
             return SearchResult.empty();

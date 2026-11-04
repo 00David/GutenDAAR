@@ -1,6 +1,7 @@
 package fr.sorbonne_u.gutenDAAR.api.dto;
 
 import fr.sorbonne_u.gutenDAAR.database.entities.Book;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Book as sent to the frontend.
@@ -8,17 +9,18 @@ import fr.sorbonne_u.gutenDAAR.database.entities.Book;
  * <p>Kept separate from the {@link Book} entity, so that the database layout can change
  * without changing the JSON contract of the API.</p>
  *
- * @param id            The unique Gutenberg book id.
- * @param title         The book title.
- * @param author        The book author(s), or null if unknown.
- * @param language      The book language code (e.g. "en").
- * @param wordCount     The number of words of the book.
- * @param centrality    The book centrality in the document graph, or null if not computed yet.
- * @param coverUrl      The API path of the book cover.
- * @param gutenbergUrl  The page of the book on Project Gutenberg.
+ * @param id                        The unique Gutenberg book id.
+ * @param title                     The book title.
+ * @param author                    The book author(s), or null if unknown.
+ * @param language                  The book language code (e.g. "en").
+ * @param wordCount                 The number of words of the book.
+ * @param closenessCentrality       The book closeness centrality in the document graph, or null if not computed yet.
+ * @param betweennessCentrality     The book betweenness centrality in the document graph, or null if not computed yet.
+ * @param pagerankCentrality        The book pagerank centrality in the document graph, or null if not computed yet.
  */
-public record BookDTO(int id, String title, String author, String language, int wordCount,
-                      Double centrality, String coverUrl, String gutenbergUrl) {
+public record BookDTO(int id, String title, @Nullable String author, String language, int wordCount,
+                      @Nullable Double closenessCentrality, @Nullable Double betweennessCentrality,
+                      @Nullable Double pagerankCentrality) {
 
     /**
      * Build the DTO of a book entity.
@@ -33,9 +35,9 @@ public record BookDTO(int id, String title, String author, String language, int 
                 book.getAuthor(),
                 book.getLanguage(),
                 book.getWordCount(),
-                book.getCentrality(),
-                "/api/books/" + id + "/cover",
-                "https://www.gutenberg.org/ebooks/" + id
+                book.getClosenessCentrality(),
+                book.getBetweennessCentrality(),
+                book.getPagerankCentrality()
         );
     }
 }

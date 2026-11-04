@@ -1,18 +1,26 @@
 -- Book metadata
 CREATE TABLE IF NOT EXISTS books (
-    id           INT NOT NULL PRIMARY KEY, -- Gutenberg id
-    title        TEXT NOT NULL,
-    author       TEXT,
-    language     TEXT NOT NULL,
-    word_count   INT  NOT NULL,
-    centrality    DOUBLE PRECISION
+    id                          INT NOT NULL PRIMARY KEY, -- Gutenberg id
+    title                       TEXT NOT NULL,
+    author                      TEXT,
+    language                    TEXT NOT NULL,
+    word_count                  INT  NOT NULL,
+    closeness_centrality        DOUBLE PRECISION,
+    betweenness_centrality      DOUBLE PRECISION,
+    pagerank_centrality         DOUBLE PRECISION
+);
+
+-- Full original text of each book, kept apart from the metadata so that it is only loaded when needed
+CREATE TABLE IF NOT EXISTS book_texts (
+    book_id     INT  NOT NULL PRIMARY KEY REFERENCES books(id) ON DELETE CASCADE,
+    content     TEXT NOT NULL
 );
 
 -- Forwarded index
 CREATE TABLE IF NOT EXISTS postings (
-    book_id      INT  NOT NULL REFERENCES books(id) ON DELETE CASCADE,
-    term         TEXT NOT NULL,
-    occurrences  INT  NOT NULL,
+    book_id                     INT  NOT NULL REFERENCES books(id) ON DELETE CASCADE,
+    term                        TEXT NOT NULL,
+    occurrences                 INT  NOT NULL,
     PRIMARY KEY (book_id, term) -- book → term
 );
 -- Inverted index (dynamically created once the postings table has been filled)
@@ -20,9 +28,9 @@ CREATE TABLE IF NOT EXISTS postings (
 
 -- Jaccard graph (symmetrical)
 CREATE TABLE IF NOT EXISTS jaccard_edges (
-    book_a    INT  NOT NULL REFERENCES books(id) ON DELETE CASCADE,
-    book_b    INT  NOT NULL REFERENCES books(id) ON DELETE CASCADE,
-    distance  DOUBLE PRECISION NOT NULL,
+    book_a                      INT  NOT NULL REFERENCES books(id) ON DELETE CASCADE,
+    book_b                      INT  NOT NULL REFERENCES books(id) ON DELETE CASCADE,
+    distance                    DOUBLE PRECISION NOT NULL,
     PRIMARY KEY (book_a, book_b),
     CHECK (book_a <> book_b)
 );

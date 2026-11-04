@@ -1,7 +1,6 @@
-package fr.sorbonne_u.gutenDAAR.setup.retrieval;
+package fr.sorbonne_u.gutenDAAR.setup.retrieval.covers;
 
 import fr.sorbonne_u.gutenDAAR.Settings;
-import fr.sorbonne_u.gutenDAAR.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,8 @@ import java.time.Duration;
 /**
  * Utility class for retrieving the book covers from the mirror.
  *
- * <p>Its {@link #retrieveSmallCover(int)} method is in particular exposed.</p>
+ * <p>Its {@link #retrieve(int, CoverType)} and {@link #isOnDisk(int, CoverType)} methods
+ * are in particular exposed.</p>
  */
 public class Covers {
 
@@ -26,20 +26,33 @@ public class Covers {
     protected static final Logger LOG = LoggerFactory.getLogger(Covers.class);
 
     /**
-     * Retrieve the small book cover, either by loading it from the disk if locally present,
+     * Indicates if the given book cover exists on the disk.
+     * @param bookId                    The unique Gutenberg book id.
+     * @param coverType                 The cover type to check.
+     * @return                          false if it is not there, or it is not a file.
+     */
+    public static boolean isOnDisk(int bookId, CoverType coverType) {
+        Path coverPath = coverType.coverPath(bookId);
+        return Files.exists(coverPath) && Files.isRegularFile(coverPath);
+    }
+
+    /**
+     * Retrieve the given book cover, either by loading it from the disk if locally present,
      * or after retrieving it from the mirror.
+     * @param bookId                    The unique Gutenberg book id.
+     * @param coverType                 The cover type to retrieve.
      * @return                          The raw bytes of the JPG book cover.
      * @throws IOException              If an error occurs while retrieving the file.
      * @throws InterruptedException     If an interruption occurs while retrieving the file.
      */
-    public static byte[] retrieveSmallCover(int bookId) throws IOException, InterruptedException {
-        Path smallCoverPath = Utils.smallCoverPath(bookId);
+    public static byte[] retrieve(int bookId, CoverType coverType) throws IOException, InterruptedException {
+        Path coverPath = coverType.coverPath(bookId);
         byte[] cover;
-        if (Files.exists(smallCoverPath) && Files.isRegularFile(smallCoverPath)) {
-            return load(smallCoverPath);
+        if (isOnDisk(bookId, coverType)) {
+            cover = load(coverPath);
         } else {
-            cover = retrieve(Utils.smallCoverURIWithinMirror(bookId));
-            save(cover, smallCoverPath);
+            cover = retrieve(coverType.coverURIWithinMirror(bookId));
+            save(cover, coverPath);
         }
         return cover;
     }

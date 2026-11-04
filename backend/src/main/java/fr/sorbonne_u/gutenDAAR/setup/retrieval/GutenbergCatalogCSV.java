@@ -62,7 +62,7 @@ public class GutenbergCatalogCSV {
             }
 
             try {
-                List<String> words = Library.retrieveTreatedText(id);
+                List<String> words = Library.retrieveText(id).words();
                 LOG.debug("Converted GutenbergEntry to GutenbergCatalogCSV for book {}", id);
                 return new GutenDAAREntry(
                         id,

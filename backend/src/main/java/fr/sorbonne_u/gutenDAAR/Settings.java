@@ -1,5 +1,6 @@
 package fr.sorbonne_u.gutenDAAR;
 
+import fr.sorbonne_u.gutenDAAR.setup.retrieval.covers.CoverType;
 import org.apache.commons.csv.CSVFormat;
 
 import java.net.URI;
@@ -14,6 +15,9 @@ import java.util.Set;
 public final class Settings {
 
     private Settings() {}
+
+    /** Gutenberg URL. */
+    public static final URI GUTENBERG_URL = URI.create("https://www.gutenberg.org/");
 
     /** Number of processed books between two progress bar logs. */
     public static final int PROGRESS_BAR_STEP = 20;
@@ -49,8 +53,15 @@ public final class Settings {
     public static final Set<String> EXCLUDED_LANGUAGES = Set.of("zh", "ja", "ko", "th", "lo", "km", "my", "bo");
     /** Rows per JDBC batch: must be the same as {@code spring.jpa.properties.hibernate.jdbc.batch_size}. */
     public static final int BATCH_SIZE = 1000;
+    /** Book cover type to retrieve during setup. */
+    public static final CoverType COVER_TYPE = CoverType.ORIGINAL;
 
     /* API PART */
+
+    /** Book API mapping string. */
+    public static final String BOOK_API_MAPPING = "/api/books";
+    /** Search API mapping string. */
+    public static final String SEARCH_API_MAPPING = "/api/search";
 
     /** Default number of results per page. */
     public static final int DEFAULT_PAGE_SIZE = 20;
@@ -60,5 +71,4 @@ public final class Settings {
     public static final int RECOMMENDATION_SOURCES = 5;
     /** Maximum number of recommendations returned with a search. */
     public static final int MAX_RECOMMENDATIONS = 10;
-
 }

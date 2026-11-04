@@ -23,12 +23,12 @@ public interface PostingRepository extends JpaRepository<Posting, Posting.Postin
     List<Posting> findByTerm(String term);
 
     /**
-     * Find the terms of a book, using the primary key {@code (book_id, term)} as forward index.
+     * Find the words of a book, using the primary key {@code (book_id, term)} as forward index.
      *
-     * <p>Only the terms are selected: no {@link Posting} entity is loaded into the persistence context.</p>
+     * <p>Only the words are selected: no {@link Posting} entity is loaded into the persistence context.</p>
      *
      * @param bookId    The unique Gutenberg book id.
-     * @return          The terms of this book.
+     * @return          The words of this book.
      */
     @Query("SELECT p.term FROM Posting p WHERE p.bookId = :bookId")
     Set<String> findTermsByBookId(@Param("bookId") int bookId);

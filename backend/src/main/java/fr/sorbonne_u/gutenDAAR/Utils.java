@@ -1,7 +1,7 @@
 package fr.sorbonne_u.gutenDAAR;
 
 import java.net.URI;
-import java.nio.file.Path;
+import java.util.Locale;
 
 /**
  * Utility class.
@@ -33,21 +33,14 @@ public final class Utils {
     }
 
     /**
-     * Convert a book id to its path on the disk.
-     * @param id    A Gutenberg book id.
-     * @return      Its path on the disk.
+     * Normalize a word like an indexed term.
+     *
+     * <p>Must stay identical to the tokenization of the books.</p>
+     *
+     * @param word      The word to normalize.
+     * @return          The normalized word.
      */
-    public static Path smallCoverPath(int id) {
-        return Settings.COVERS_FOLDER_PATH.resolve("small_covers/" + id + ".jpg");
-    }
-
-    /**
-     * Convert a book id to its URI within the {@link Settings#MIRROR_URL} Gutenberg mirror.
-     * @param id    A Gutenberg book id.
-     * @return      Its small cover URI within the {@link Settings#MIRROR_URL} Gutenberg mirror.
-     */
-    public static URI smallCoverURIWithinMirror(int id) {
-        String inMirror = id + "/pg" + id + ".cover.small.jpg";
-        return Settings.MIRROR_URL.resolve(inMirror);
+    public static String normalize(String word) {
+        return word.strip().toLowerCase(Locale.ROOT);
     }
 }
