@@ -6,10 +6,7 @@ import fr.sorbonne_u.gutenDAAR.api.dto.SearchResponseDTO;
 import fr.sorbonne_u.gutenDAAR.api.dto.SearchResultDTO;
 import fr.sorbonne_u.gutenDAAR.database.entities.Book;
 import fr.sorbonne_u.gutenDAAR.database.services.BookService;
-import fr.sorbonne_u.gutenDAAR.search.KeywordSearchService;
-import fr.sorbonne_u.gutenDAAR.search.RecommendationService;
-import fr.sorbonne_u.gutenDAAR.search.ScoredBook;
-import fr.sorbonne_u.gutenDAAR.search.SearchResult;
+import fr.sorbonne_u.gutenDAAR.search.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +27,7 @@ import java.util.Set;
  * (package {@code search}), paginates, adds the recommendations, and measures the time.</p>
  */
 @RestController
-@RequestMapping("/api/search")
+@RequestMapping(Settings.SEARCH_API_MAPPING)
 public class SearchController {
 
     /** The injected keyword search service. */
@@ -70,7 +67,7 @@ public class SearchController {
         checkPaging(page, size);
 
         SearchResult result = keywordSearch.search(keyword);
-        return buildResponse(q, "keyword", result, page, size, start);
+        return buildResponse(q, SearchMode.KEYWORD, result, page, size, start);
     }
 
     /**
@@ -92,15 +89,15 @@ public class SearchController {
     /**
      * Build the response of a search, common to all the search algorithms:
      * cut the requested page, add the recommendations, load the books, and stop the timer.
-     * @param query     The query as typed by the user.
-     * @param mode      The search algorithm name.
-     * @param result    The ranked result of the algorithm.
-     * @param page      The page number.
-     * @param size      The page size.
-     * @param start     The {@link System#nanoTime()} when the request started.
-     * @return          The response.
+     * @param query         The query as typed by the user.
+     * @param searchMode    The search mode on book terms.
+     * @param result        The ranked result of the algorithm.
+     * @param page          The page number.
+     * @param size          The page size.
+     * @param start         The {@link System#nanoTime()} when the request started.
+     * @return              The response.
      */
-    protected SearchResponseDTO buildResponse(String query, String mode, SearchResult result,
+    protected SearchResponseDTO buildResponse(String query, SearchMode searchMode, SearchResult result,
                                               int page, int size, long start) {
         List<ScoredBook> ranked = result.ranked();
 
@@ -143,7 +140,7 @@ public class SearchController {
         }
 
         double timeMs = (System.nanoTime() - start) / 1_000_000.0;
-        return new SearchResponseDTO(query, mode, timeMs, ranked.size(), page, size,
+        return new SearchResponseDTO(query, searchMode, timeMs, ranked.size(), page, size,
                 result.matchedWords(), results, recommended);
     }
 }

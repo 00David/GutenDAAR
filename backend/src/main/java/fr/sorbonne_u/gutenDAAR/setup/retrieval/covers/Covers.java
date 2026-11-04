@@ -1,7 +1,6 @@
 package fr.sorbonne_u.gutenDAAR.setup.retrieval.covers;
 
 import fr.sorbonne_u.gutenDAAR.Settings;
-import fr.sorbonne_u.gutenDAAR.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,8 @@ import java.time.Duration;
 /**
  * Utility class for retrieving the book covers from the mirror.
  *
- * <p>Its {@link #retrieve(int, CoverType, boolean)} method is in particular exposed.</p>
+ * <p>Its {@link #retrieve(int, CoverType)} and {@link #isOnDisk(int, CoverType)} methods
+ * are in particular exposed.</p>
  */
 public class Covers {
 
@@ -26,40 +26,34 @@ public class Covers {
     protected static final Logger LOG = LoggerFactory.getLogger(Covers.class);
 
     /**
-     * Retrieve the given book cover, either by:
-     * <ul>
-     *     <li>Loading it from the disk.</li>
-     *     <li>Retrieving it from the mirror.</li>
-     *     <li>Loading a fallback placeholder from the disk, if mentioned.</li>
-     * </ul>
+     * Indicates if the given book cover exists on the disk.
+     * @param bookId                    The unique Gutenberg book id.
+     * @param coverType                 The cover type to check.
+     * @return                          false if it is not there, or it is not a file.
+     */
+    public static boolean isOnDisk(int bookId, CoverType coverType) {
+        Path coverPath = coverType.coverPath(bookId);
+        return Files.exists(coverPath) && Files.isRegularFile(coverPath);
+    }
+
+    /**
+     * Retrieve the given book cover, either by loading it from the disk if locally present,
+     * or after retrieving it from the mirror.
      * @param bookId                    The unique Gutenberg book id.
      * @param coverType                 The cover type to retrieve.
-     * @param allowPlaceholder          Allow the fallback placeholder to be used in case of need.
      * @return                          The raw bytes of the JPG book cover.
      * @throws IOException              If an error occurs while retrieving the file.
      * @throws InterruptedException     If an interruption occurs while retrieving the file.
      */
-    public static byte[] retrieve(int bookId, CoverType coverType, boolean allowPlaceholder) throws IOException, InterruptedException {
+    public static byte[] retrieve(int bookId, CoverType coverType) throws IOException, InterruptedException {
         Path coverPath = coverType.coverPath(bookId);
-        if (Files.exists(coverPath) && Files.isRegularFile(coverPath)) {
-            return load(coverPath);
-        }
-
         byte[] cover;
-        try {
+        if (isOnDisk(bookId, coverType)) {
+            cover = load(coverPath);
+        } else {
             cover = retrieve(coverType.coverURIWithinMirror(bookId));
-        } catch (IOException e) {
-            // If the cover cannot be retrieved (retrieve throws an IOException),
-            if (allowPlaceholder) {
-                // Then the placeholder is used, if mentioned
-                Path coverPlaceholderPath = coverType.coverPlaceholderPath();
-                return load(coverPlaceholderPath);
-            } else {
-                // Otherwise, the exception is propagated
-                throw e;
-            }
+            save(cover, coverPath);
         }
-        save(cover, coverPath);
         return cover;
     }
 

@@ -10,7 +10,7 @@ export default function BookCard({ book }: { book: Book }) {
 
   return (
     <Link to={`/book/${book.id}`} className={styles.card}>
-      <Cover coverUrl={book.coverUrl} title={title} className={styles.cover} />
+      <Cover coverUrl={book.bookCoverEndpoint} title={title} className={styles.cover} />
       <div className={styles.text}>
         <p className={styles.title}>{title}</p>
         <p className={styles.author}>{formatAuthor(book.author)}</p>

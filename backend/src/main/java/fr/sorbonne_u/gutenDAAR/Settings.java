@@ -16,6 +16,9 @@ public final class Settings {
 
     private Settings() {}
 
+    /** Gutenberg URL. */
+    public static final URI GUTENBERG_URL = URI.create("https://www.gutenberg.org/");
+
     /** Number of processed books between two progress bar logs. */
     public static final int PROGRESS_BAR_STEP = 20;
 
@@ -55,6 +58,11 @@ public final class Settings {
 
     /* API PART */
 
+    /** Book API mapping string. */
+    public static final String BOOK_API_MAPPING = "/api/books";
+    /** Search API mapping string. */
+    public static final String SEARCH_API_MAPPING = "/api/search";
+
     /** Default number of results per page. */
     public static final int DEFAULT_PAGE_SIZE = 20;
     /** Maximum number of results per page. */
@@ -63,5 +71,4 @@ public final class Settings {
     public static final int RECOMMENDATION_SOURCES = 5;
     /** Maximum number of recommendations returned with a search. */
     public static final int MAX_RECOMMENDATIONS = 10;
-
 }

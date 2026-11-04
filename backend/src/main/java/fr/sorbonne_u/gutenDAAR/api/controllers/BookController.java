@@ -1,11 +1,11 @@
 package fr.sorbonne_u.gutenDAAR.api.controllers;
 
 import fr.sorbonne_u.gutenDAAR.Settings;
-import fr.sorbonne_u.gutenDAAR.Utils;
 import fr.sorbonne_u.gutenDAAR.api.dto.BookDTO;
 import fr.sorbonne_u.gutenDAAR.database.entities.Book;
 import fr.sorbonne_u.gutenDAAR.database.services.BookService;
 import fr.sorbonne_u.gutenDAAR.search.RecommendationService;
+import fr.sorbonne_u.gutenDAAR.setup.retrieval.covers.Covers;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -31,17 +30,17 @@ import java.util.Set;
  * REST endpoints about a single book: details, cover and neighbours in the document graph.
  */
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping(Settings.BOOK_API_MAPPING)
 public class BookController {
 
     /** The injected book service. */
     protected final BookService bookService;
     /** The injected recommendation service. */
-    protected final RecommendationService recommendations;
+    protected final RecommendationService recommendationService;
 
-    public BookController(BookService bookService, RecommendationService recommendations) {
+    public BookController(BookService bookService, RecommendationService recommendationService) {
         this.bookService = bookService;
-        this.recommendations = recommendations;
+        this.recommendationService = recommendationService;
     }
 
     /**
@@ -58,7 +57,7 @@ public class BookController {
     }
 
     /**
-     * Get the small cover of a book, as downloaded during the setup.
+     * Get a book cover, as downloaded during the setup.
      * Never downloads anything at request time.
      * @param id    The unique Gutenberg book id.
      * @return      The JPEG cover, cached by the browser for a day.
@@ -66,10 +65,10 @@ public class BookController {
      */
     @GetMapping("/{id}/cover")
     public ResponseEntity<Resource> getCover(@PathVariable int id) {
-        Path cover = Utils.smallCoverPath(id);
-        if (!Files.isRegularFile(cover)) {
+        if (!Covers.isOnDisk(id, Settings.COVER_TYPE)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No cover for book " + id);
         }
+        Path cover = Settings.COVER_TYPE.coverPath(id);
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
                 .cacheControl(CacheControl.maxAge(Duration.ofDays(1)))
@@ -95,7 +94,7 @@ public class BookController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unknown book " + id);
         }
 
-        List<Integer> neighbourIds = recommendations.recommend(List.of(id), Set.of(id), limit);
+        List<Integer> neighbourIds = recommendationService.recommend(List.of(id), Set.of(id), limit);
         Map<Integer, Book> books = bookService.findAllById(neighbourIds);
         List<BookDTO> neighbours = new ArrayList<>(neighbourIds.size());
         for (int neighbourId : neighbourIds) {

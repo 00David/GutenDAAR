@@ -88,9 +88,8 @@ public class Library {
                 }
 
                 for (String word : WHITESPACES.split(line)) {
-                    if (!word.isEmpty()) {
-                        words.add(word.toLowerCase(Locale.ROOT));
-                    }
+                    String normalizedWord = Utils.normalize(word);
+                    if (!normalizedWord.isEmpty()) words.add(normalizedWord);
                 }
             // If the "real" text content has not started yet,
             // check if it will start (from the next line after the start marker)

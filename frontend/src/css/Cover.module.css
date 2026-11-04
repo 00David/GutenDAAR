@@ -5,6 +5,7 @@
   box-shadow: var(--shadow-sm);
 }
 
+/* UNUSED FOR NOW */
 .placeholder {
   display: flex;
   align-items: center;

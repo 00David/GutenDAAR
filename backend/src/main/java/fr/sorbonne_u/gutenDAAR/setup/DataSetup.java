@@ -100,7 +100,7 @@ public class DataSetup implements ApplicationRunner {
 
             try {
                 // Retrieve its original cover if not already present (and save it on the disk)
-                Covers.retrieve(book.id(), coverType, false);
+                Covers.retrieve(book.id(), coverType);
             } catch (IOException e) {
                 LOG.warn("No cover for book {}: {}", book.id(), e.getMessage());
             }
@@ -120,6 +120,7 @@ public class DataSetup implements ApplicationRunner {
      * @throws InterruptedException     If an interruption occurs while retrieving a book text.
      */
     protected void initPostings(List<GutenDAAREntry> catalog) throws InterruptedException{
+        LOG.atInfo().addArgument(() -> Utils.progressBar(0, catalog.size())).log("Building book postings {}");
         // For each book
         for (int i = 0; i < catalog.size(); i++) {
             GutenDAAREntry book = catalog.get(i);

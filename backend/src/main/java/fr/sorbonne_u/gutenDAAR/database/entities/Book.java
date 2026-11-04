@@ -54,6 +54,14 @@ public class Book implements Persistable<Integer> {
         this.pagerankCentrality = pagerankCentrality;
     }
 
+    /**
+     * Returns the identifier of this book.
+     * <p>
+     * The return type is the {@link Integer} wrapper class so that it can be used
+     * by classes as a generic type argument.
+     * </p>
+     * @return the unique Gutenberg book id, never {@code null}
+     */
     @Override
     public Integer getId() {
         return id;

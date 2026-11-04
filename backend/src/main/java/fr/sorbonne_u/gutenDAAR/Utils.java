@@ -1,6 +1,7 @@
 package fr.sorbonne_u.gutenDAAR;
 
 import java.net.URI;
+import java.util.Locale;
 
 /**
  * Utility class.
@@ -29,5 +30,20 @@ public final class Utils {
     public static URI textURIWithinMirror(int id) {
         String inMirror = id + "/pg" + id + ".txt";
         return Settings.MIRROR_URL.resolve(inMirror);
+    }
+
+
+    /**
+     * Normalize a word like an indexed term.
+     *
+     * <p>Must stay identical to the tokenization of the books.</p>
+     *
+     * @param word      The word to normalize.
+     * @return          The normalized word.
+     */
+    public static String normalize(String word) {
+        String wordWithoutStartEndWhitespaces = word.strip();
+        String wordToLowerCase = wordWithoutStartEndWhitespaces.toLowerCase(Locale.ROOT);
+        return wordToLowerCase;
     }
 }

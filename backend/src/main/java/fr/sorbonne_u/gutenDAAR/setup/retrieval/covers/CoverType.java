@@ -27,17 +27,6 @@ public enum CoverType {
     }
 
     /**
-     * Convert a book id to its cover placeholder path on the disk.
-     * @return          Its cover placeholder path on the disk.
-     */
-    public Path coverPlaceholderPath() {
-        return switch (this) {
-            case SMALL    -> Settings.COVERS_FOLDER_PATH.resolve("small_covers/placeholder.jpg");
-            case ORIGINAL -> Settings.COVERS_FOLDER_PATH.resolve("original_covers/placeholder.jpg");
-        };
-    }
-
-    /**
      * Convert a book id to its cover URI within the {@link Settings#MIRROR_URL} Gutenberg mirror.
      * @param bookId    A Gutenberg book id.
      * @return          Its cover URI within the {@link Settings#MIRROR_URL} Gutenberg mirror.

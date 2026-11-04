@@ -7,6 +7,27 @@
  */
 const API_URL: string = import.meta.env.VITE_API_URL ?? ''
 
+/** Absolute URL of an API path. */
+export function apiUrl(path: string): string {
+  return API_URL + path
+}
+
+/** Gutenberg URL, used for inserting links targeting book descriptions. */
+const GUTENBERG_URL:string = 'https://www.gutenberg.org/'
+
+export function gutenbergBookUrl(id: number): string {
+  return GUTENBERG_URL + 'ebooks/' + id
+}
+
+/** Default placeholder cover type. */
+export const PLACEHOLDER_COVER_TYPE: CoverType = 'original'
+
+type CoverType = 'small' | 'original'
+export const placeholderCoverPath: Record<CoverType, string> = {
+  small: '/covers/small-placeholder.jpg',
+  original: '/covers/placeholder.jpg',
+}
+
 /** A book, as returned by /api/books/{id} and in the recommendations. */
 export interface Book {
   id: number
@@ -14,8 +35,10 @@ export interface Book {
   author: string | null
   language: string
   wordCount: number
-  centrality: number | null
-  coverUrl: string
+  closenessCentrality: number | null
+  betweennessCentrality: number | null
+  pagerankCentrality: number | null
+  bookCoverEndpoint: string
   gutenbergUrl: string
 }
 
@@ -25,9 +48,11 @@ export interface SearchResult {
   title: string
   author: string | null
   language: string
-  coverUrl: string
+  closenessCentrality: number | null
+  betweennessCentrality: number | null
+  pagerankCentrality: number | null
+  bookCoverEndpoint: string
   score: number
-  centrality: number | null
 }
 
 /** Response of every search endpoint. */
@@ -51,11 +76,6 @@ export class ApiError extends Error {
     super(message)
     this.status = status
   }
-}
-
-/** Absolute URL of an API path (e.g. a cover URL returned by the API). */
-export function apiUrl(path: string): string {
-  return API_URL + path
 }
 
 async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {

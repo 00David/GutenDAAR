@@ -51,7 +51,7 @@ public class PostingService {
                 LOG.debug("Saved postings and cleared persistence context after {} iterations.", i);
             }
         }
-        LOG.info("Inserted {} postings.", postings.size());
+        LOG.debug("Inserted {} postings.", postings.size());
     }
 
     /**

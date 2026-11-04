@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { apiUrl } from '../api'
+import {apiUrl, PLACEHOLDER_COVER_TYPE, placeholderCoverPath} from '../api'
 import styles from '../css/Cover.module.css'
 
 interface CoverProps {
@@ -15,9 +15,12 @@ export default function Cover({ coverUrl, title, className = '' }: CoverProps) {
 
   if (failed) {
     return (
-      <div className={`${styles.placeholder} ${className}`} aria-label={`No cover for ${title}`}>
-        No cover
-      </div>
+        <img
+            src={placeholderCoverPath[PLACEHOLDER_COVER_TYPE]}
+            alt={`Placeholder cover of ${title}`}
+            loading="lazy"
+            className={`${styles.image} ${className}`}
+        />
     )
   }
   return (

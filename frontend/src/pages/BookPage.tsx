@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router'
-import { getBook, getNeighbours, type Book } from '../api'
+import {getBook, getNeighbours, type Book, gutenbergBookUrl} from '../api'
 import BookCard from '../components/BookCard'
 import Cover from '../components/Cover'
 import Header from '../components/Header'
@@ -76,7 +76,7 @@ function BookDetails({ book }: { book: Book }) {
 
   return (
     <article className={styles.details}>
-      <Cover coverUrl={book.coverUrl} title={title} className={styles.cover} />
+      <Cover coverUrl={book.bookCoverEndpoint} title={title} className={styles.cover} />
       <div className={styles.info}>
         <h1 className={styles.title}>{title}</h1>
         {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
@@ -88,12 +88,12 @@ function BookDetails({ book }: { book: Book }) {
           <dt>Words</dt>
           <dd>{book.wordCount.toLocaleString('en')}</dd>
           <dt>Centrality</dt>
-          <dd>{formatCentrality(book.centrality)}</dd>
+          <dd>{formatCentrality(book.pagerankCentrality)}</dd>
           <dt>Gutenberg id</dt>
           <dd>{book.id}</dd>
         </dl>
 
-        <a href={book.gutenbergUrl} target="_blank" rel="noreferrer" className={styles.read}>
+        <a href={gutenbergBookUrl(book.id)} target="_blank" rel="noreferrer" className={styles.read}>
           Read on Gutenberg ↗
         </a>
       </div>
