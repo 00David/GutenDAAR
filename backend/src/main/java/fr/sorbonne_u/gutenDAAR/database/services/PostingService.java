@@ -85,7 +85,7 @@ public class PostingService {
 
     /**
      * Find the postings of a term: the books containing it, with their occurrences (inverted index lookup).
-     * @param term      The term to look up, already normalized like the indexed terms.
+     * @param term      The term to look up, already normalized like the indexed words.
      * @return          The postings of the term, in no particular order, empty if the term is unknown.
      */
     public List<Posting> findByTerm(String term) {
@@ -93,13 +93,13 @@ public class PostingService {
     }
 
     /**
-     * Get the distinct terms of a book.
+     * Get the distinct words of a book.
      * @param bookId    The unique Gutenberg book id.
-     * @return          The terms of this book, empty if the book is unknown or has no posting.
+     * @return          The words of this book, empty if the book is unknown or has no posting.
      */
     public Set<String> getBookTerms(int bookId) {
         Set<String> terms = postingRepository.findTermsByBookId(bookId);
-        LOG.debug("Got terms from book {}.", bookId);
+        LOG.debug("Got words from book {}.", bookId);
         return terms;
     }
 }

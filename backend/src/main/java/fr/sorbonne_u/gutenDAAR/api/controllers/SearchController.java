@@ -90,7 +90,7 @@ public class SearchController {
      * Build the response of a search, common to all the search algorithms:
      * cut the requested page, add the recommendations, load the books, and stop the timer.
      * @param query         The query as typed by the user.
-     * @param searchMode    The search mode on book terms.
+     * @param searchMode    The search mode on book words.
      * @param result        The ranked result of the algorithm.
      * @param page          The page number.
      * @param size          The page size.

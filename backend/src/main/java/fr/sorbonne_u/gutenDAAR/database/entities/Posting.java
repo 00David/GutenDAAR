@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 
 /**
- * Entity corresponding to a link between a book and one of its terms,
+ * Entity corresponding to a link between a book and one of its words,
  * in the graph used both for forward indexing and for inverted indexing.
  *
  * <p>The entity is persistable: on a first save, a useless SELECT method is avoided.</p>
@@ -17,7 +17,7 @@ public class Posting implements Persistable<Posting.PostingId> {
     @Transient
     private boolean isNew = true;
 
-    /** The identifier of a posting: a book and one of its terms. */
+    /** The identifier of a posting: a book and one of its words. */
     public record PostingId(int bookId, String term) {}
 
     /** The unique Gutenberg id. */

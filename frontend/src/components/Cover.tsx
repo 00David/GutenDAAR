@@ -1,16 +1,16 @@
 import { useState } from 'react'
-import {apiUrl, PLACEHOLDER_COVER_TYPE, placeholderCoverPath} from '../api'
+import {bookCoverUrl, PLACEHOLDER_COVER_TYPE, placeholderCoverPath} from '../api'
 import styles from '../css/Cover.module.css'
 
 interface CoverProps {
-  coverUrl: string
+  bookId: number
   title: string
   /** Class setting the size of the cover. */
   className?: string
 }
 
 /** Book cover, with a plain placeholder when the book has no cover. */
-export default function Cover({ coverUrl, title, className = '' }: CoverProps) {
+export default function Cover({ bookId, title, className = '' }: CoverProps) {
   const [failed, setFailed] = useState(false)
 
   if (failed) {
@@ -25,7 +25,7 @@ export default function Cover({ coverUrl, title, className = '' }: CoverProps) {
   }
   return (
     <img
-      src={apiUrl(coverUrl)}
+      src={bookCoverUrl(bookId)}
       alt={`Cover of ${title}`}
       loading="lazy"
       onError={() => setFailed(true)}

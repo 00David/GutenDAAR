@@ -10,6 +10,12 @@ CREATE TABLE IF NOT EXISTS books (
     pagerank_centrality         DOUBLE PRECISION
 );
 
+-- Full original text of each book, kept apart from the metadata so that it is only loaded when needed
+CREATE TABLE IF NOT EXISTS book_texts (
+    book_id     INT  NOT NULL PRIMARY KEY REFERENCES books(id) ON DELETE CASCADE,
+    content     TEXT NOT NULL
+);
+
 -- Forwarded index
 CREATE TABLE IF NOT EXISTS postings (
     book_id                     INT  NOT NULL REFERENCES books(id) ON DELETE CASCADE,

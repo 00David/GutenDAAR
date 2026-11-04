@@ -32,7 +32,6 @@ public final class Utils {
         return Settings.MIRROR_URL.resolve(inMirror);
     }
 
-
     /**
      * Normalize a word like an indexed term.
      *
@@ -42,8 +41,6 @@ public final class Utils {
      * @return          The normalized word.
      */
     public static String normalize(String word) {
-        String wordWithoutStartEndWhitespaces = word.strip();
-        String wordToLowerCase = wordWithoutStartEndWhitespaces.toLowerCase(Locale.ROOT);
-        return wordToLowerCase;
+        return word.strip().toLowerCase(Locale.ROOT);
     }
 }

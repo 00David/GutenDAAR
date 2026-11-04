@@ -8,7 +8,7 @@ import java.util.List;
  * Response of every search endpoint (keyword, regex on words, regex on full text): same shape for all.
  *
  * @param query             The query as typed by the user.
- * @param searchMode        The search mode on book terms.
+ * @param searchMode        The search mode on book words.
  * @param timeMs            Server-side time to answer, in milliseconds (search + ranking + recommendations).
  * @param total             The total number of matching books, over all pages.
  * @param page              The page number, from 0.

@@ -1,6 +1,7 @@
 package fr.sorbonne_u.gutenDAAR.api.dto;
 
 import fr.sorbonne_u.gutenDAAR.database.entities.Book;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Book as sent to the frontend.
@@ -17,8 +18,9 @@ import fr.sorbonne_u.gutenDAAR.database.entities.Book;
  * @param betweennessCentrality     The book betweenness centrality in the document graph, or null if not computed yet.
  * @param pagerankCentrality        The book pagerank centrality in the document graph, or null if not computed yet.
  */
-public record BookDTO(int id, String title, String author, String language, int wordCount,
-                      Double closenessCentrality, Double betweennessCentrality, Double pagerankCentrality) {
+public record BookDTO(int id, String title, @Nullable String author, String language, int wordCount,
+                      @Nullable Double closenessCentrality, @Nullable Double betweennessCentrality,
+                      @Nullable Double pagerankCentrality) {
 
     /**
      * Build the DTO of a book entity.

@@ -76,7 +76,7 @@ function BookDetails({ book }: { book: Book }) {
 
   return (
     <article className={styles.details}>
-      <Cover coverUrl={book.bookCoverEndpoint} title={title} className={styles.cover} />
+      <Cover bookId={book.id} title={title} className={styles.cover} />
       <div className={styles.info}>
         <h1 className={styles.title}>{title}</h1>
         {subtitle && <p className={styles.subtitle}>{subtitle}</p>}

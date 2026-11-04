@@ -1,6 +1,7 @@
 package fr.sorbonne_u.gutenDAAR.database.entities;
 
 import jakarta.persistence.*;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -24,16 +25,20 @@ public class Book implements Persistable<Integer> {
     /** The book title. */
     protected String title;
     /** The book authors. Can be {@code null} if there are no authors. */
+    @Nullable
     protected String author;
     /** The book language, as an ISO code, for instance {@code en}. */
     protected String language;
     /** The book word count. */
     protected int wordCount;
     /** The book computed closeness centrality. Can be {@code null} if not yet computed. */
+    @Nullable
     protected Double closenessCentrality;
     /** The book computed betweenness centrality. Can be {@code null} if not yet computed. */
+    @Nullable
     protected Double betweennessCentrality;
     /** The book computed pagerank (centrality). Can be {@code null} if not yet computed. */
+    @Nullable
     protected Double pagerankCentrality;
 
     protected Book() {}
@@ -42,8 +47,9 @@ public class Book implements Persistable<Integer> {
         this(id, title, author, language, wordCount, null, null, null);
     }
 
-    protected Book(int id, String title, String author, String language, int wordCount,
-                   Double closenessCentrality, Double betweennessCentrality, Double pagerankCentrality) {
+    protected Book(int id, String title, @Nullable String author, String language, int wordCount,
+                   @Nullable Double closenessCentrality, @Nullable Double betweennessCentrality,
+                   @Nullable Double pagerankCentrality) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -71,7 +77,7 @@ public class Book implements Persistable<Integer> {
         return title;
     }
 
-    public String getAuthor() {
+    @Nullable public String getAuthor() {
         return author;
     }
 
@@ -83,15 +89,15 @@ public class Book implements Persistable<Integer> {
         return wordCount;
     }
 
-    public Double getClosenessCentrality() {
+    @Nullable public Double getClosenessCentrality() {
         return closenessCentrality;
     }
 
-    public Double getBetweennessCentrality() {
+    @Nullable public Double getBetweennessCentrality() {
         return betweennessCentrality;
     }
 
-    public Double getPagerankCentrality() {
+    @Nullable public Double getPagerankCentrality() {
         return pagerankCentrality;
     }
 

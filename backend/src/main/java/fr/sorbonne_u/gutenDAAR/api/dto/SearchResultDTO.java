@@ -1,6 +1,7 @@
 package fr.sorbonne_u.gutenDAAR.api.dto;
 
 import fr.sorbonne_u.gutenDAAR.database.entities.Book;
+import jakarta.annotation.Nullable;
 
 /**
  * One book of the search results, as sent to the frontend.
@@ -14,9 +15,9 @@ import fr.sorbonne_u.gutenDAAR.database.entities.Book;
  * @param pagerankCentrality        The book pagerank centrality in the document graph, or null if not computed yet.
  * @param score                     The relevance score of the book for this search.
  */
-public record SearchResultDTO(int id, String title, String author, String language,
-                              Double closenessCentrality, Double betweennessCentrality, Double pagerankCentrality,
-                              double score) {
+public record SearchResultDTO(int id, String title, @Nullable String author, String language,
+                              @Nullable Double closenessCentrality, @Nullable Double betweennessCentrality,
+                              @Nullable Double pagerankCentrality, double score) {
 
     /**
      * Build the DTO of a book found by a search.

@@ -3,9 +3,11 @@ package fr.sorbonne_u.gutenDAAR.setup;
 import fr.sorbonne_u.gutenDAAR.Settings;
 import fr.sorbonne_u.gutenDAAR.Utils;
 import fr.sorbonne_u.gutenDAAR.database.entities.Book;
+import fr.sorbonne_u.gutenDAAR.database.entities.BookText;
 import fr.sorbonne_u.gutenDAAR.database.entities.JaccardEdge;
 import fr.sorbonne_u.gutenDAAR.database.entities.Posting;
 import fr.sorbonne_u.gutenDAAR.database.services.BookService;
+import fr.sorbonne_u.gutenDAAR.database.services.BookTextService;
 import fr.sorbonne_u.gutenDAAR.database.services.JaccardEdgeService;
 import fr.sorbonne_u.gutenDAAR.database.services.PostingService;
 import fr.sorbonne_u.gutenDAAR.setup.centrality.BookIdInMatrix;
@@ -38,13 +40,16 @@ public class DataSetup implements ApplicationRunner {
 
     /** The injected book service. */
     protected final BookService bookService;
+    /** The injected book text service. */
+    protected final BookTextService bookTextService;
     /** The injected jaccard edge service. */
     protected final JaccardEdgeService jeService;
     /** The injected posting service. */
     protected final PostingService postingService;
 
-    public DataSetup(BookService bookService, JaccardEdgeService jeService, PostingService postingService) {
+    public DataSetup(BookService bookService, BookTextService bookTextService, JaccardEdgeService jeService, PostingService postingService) {
         this.bookService = bookService;
+        this.bookTextService = bookTextService;
         this.jeService = jeService;
         this.postingService = postingService;
     }
@@ -71,8 +76,8 @@ public class DataSetup implements ApplicationRunner {
         initBooksWithoutCentrality(catalog, Settings.COVER_TYPE);
         LOG.info("2/5 - books table partially ready (without centrality computed).");
 
-        initPostings(catalog);
-        LOG.info("3/5 - postings table ready.");
+        initBookTextsAndPostings(catalog);
+        LOG.info("3/5 - book texts and postings tables ready.");
 
         initJaccardEdges(catalog);
         LOG.info("4/5 - jaccard_edges table ready.");
@@ -114,33 +119,36 @@ public class DataSetup implements ApplicationRunner {
     }
 
     /**
-     * Insert the postings of each book, then create the inverted index.
+     * Insert the raw text and postings of each book, then create the inverted index.
      * A book whose text cannot be retrieved stays without postings.
      * @param catalog                   The entries of the books to index, already inserted.
      * @throws InterruptedException     If an interruption occurs while retrieving a book text.
      */
-    protected void initPostings(List<GutenDAAREntry> catalog) throws InterruptedException{
+    protected void initBookTextsAndPostings(List<GutenDAAREntry> catalog) throws InterruptedException{
         LOG.atInfo().addArgument(() -> Utils.progressBar(0, catalog.size())).log("Building book postings {}");
         // For each book
         for (int i = 0; i < catalog.size(); i++) {
             GutenDAAREntry book = catalog.get(i);
 
             try {
-                // Retrieve the book words
-                List<String> words = Library.retrieveTreatedText(book.id());
+                // Retrieve the book text
+                Library.RetrievedText text  = Library.retrieveText(book.id());
 
-                // Build the map associating to each book word -> its n° of occurrences
+                // Insert into the book texts table the raw text
+                bookTextService.insert(new BookText(book.id(), text.rawText()));
+
+                // Build the map associating to each book term -> its n° of occurrences
                 Map<String, Integer> occurrences = new HashMap<>();
-                for (String word: words) {
-                    occurrences.merge(word, 1, Integer::sum);
+                for (String term: text.terms()) {
+                    occurrences.merge(term, 1, Integer::sum);
                 }
 
                 // Insert into the postings table the book's map associations
                 List<Posting> postings = new ArrayList<>();
                 for (Map.Entry<String, Integer> occurrence: occurrences.entrySet()) {
-                    String word = occurrence.getKey();
+                    String term = occurrence.getKey();
                     int nbOccurrences = occurrence.getValue();
-                    postings.add(new Posting(book.id(), word, nbOccurrences));
+                    postings.add(new Posting(book.id(), term, nbOccurrences));
                 }
                 postingService.insert(postings);
             } catch (IOException e) {
@@ -165,7 +173,7 @@ public class DataSetup implements ApplicationRunner {
     protected void initJaccardEdges(List<GutenDAAREntry> catalog) {
         List<JaccardEdge> edges = new ArrayList<>();
 
-        // Load the terms only once per book
+        // Load the words only once per book
         List<Set<String>> terms = catalog.stream()
                 .map(e -> postingService.getBookTerms(e.id()))
                 .toList();

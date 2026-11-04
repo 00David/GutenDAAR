@@ -2,6 +2,7 @@ package fr.sorbonne_u.gutenDAAR.api.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * Serve the frontend for its client-side routes.
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class FrontendController {
 
     @GetMapping("/book/{id}")
-    public String book() {
+    public String book(@PathVariable int id) {
         return "forward:/index.html";
     }
 }

@@ -1,106 +1,105 @@
 Id,Title,Authors,Language,WordCount
-66,The Dawn of Amateur Radio in the U.K. and Greece: A Personal View,"Joly, Norman F.",en,31090
-93,"Tom Sawyer, Detective","Twain, Mark, 1835-1910",en,23263
-95,The prisoner of Zenda,"Hope, Anthony, 1863-1933",en,53716
-103,Around the World in Eighty Days,"Verne, Jules, 1828-1905; Towle, George M. (George Makepeace), 1841-1893 [Translator]",en,63334
-105,Persuasion,"Austen, Jane, 1775-1817",en,83335
-133,The Damnation of Theron Ware,"Frederic, Harold, 1856-1898",en,118275
-160,"The Awakening, and Selected Short Stories","Chopin, Kate, 1850-1904",en,64028
-219,Heart of Darkness,"Conrad, Joseph, 1857-1924",en,37917
-220,The Secret Sharer,"Conrad, Joseph, 1857-1924",en,16548
-233,Sister Carrie: A Novel,"Dreiser, Theodore, 1871-1945",en,156474
-265,The Life and Death of Cormac the Skald,"Collingwood, W. G. (William Gershom), 1854-1932 [Translator]; Jón Stefánsson, 1862- [Translator]",en,18139
-290,"The Stark Munro Letters
-Being series of twelve letters written by J. Stark Munro, M.B., to his friend and former fellow-student, Herbert Swanborough, of Lowell, Massachusetts, during the years 1881-1884","Doyle, Arthur Conan, 1859-1930",en,77470
-312,Young Adventure: A Book of Poems,"Benét, Stephen Vincent, 1898-1943",en,14436
-317,"The Culprit Fay, and Other Poems","Drake, Joseph Rodman, 1795-1820",en,11692
-330,Where There's a Will,"Rinehart, Mary Roberts, 1876-1958",en,65478
-353,"In Flanders Fields, and Other Poems","McCrae, John, 1872-1918; Macphail, Andrew, 1864-1938 [Contributor]",en,28980
-364,The Mad King,"Burroughs, Edgar Rice, 1875-1950",en,93073
-378,The White Knight: Tirant Lo Blanc,"Martorell, Joanot, -1468; Galba, Martí Joan de, -1490; Rudder, Robert S. [Translator]",en,161482
-382,Edinburgh: Picturesque Notes,"Stevenson, Robert Louis, 1850-1894",en,21762
-450,Susan Lenox: Her Fall and Rise,"Phillips, David Graham, 1867-1911",en,299264
-457,The Price She Paid,"Phillips, David Graham, 1867-1911",en,96699
-460,The Dawn of a To-morrow,"Burnett, Frances Hodgson, 1849-1924; Yohn, F. C. (Frederick Coffay), 1875-1933 [Illustrator]",en,18448
-466,The Gaming Table: Its Votaries and Victims. Volume 1 (of 2),"Steinmetz, Andrew, 1816-1877",en,85290
-474,"How to Tell Stories to Children, and Some Stories to Tell","Bryant, Sara Cone, 1873-1956",en,55945
-475,"In Darkest England, and the Way Out","Booth, William, 1829-1912",en,125621
-476,"James Nasmyth, Engineer: An Autobiography","Nasmyth, James, 1808-1890; Smiles, Samuel, 1812-1904 [Editor]",en,145000
-554,The Contrast,"Tyler, Royall, 1757-1826; McKee, Thomas Jefferson, 1840-1899 [Author of introduction, etc.]",en,21854
-560,Mr. Standfast,"Buchan, John, 1875-1940",en,128241
-563,"The Planet Mars and Its Inhabitants, a Psychic Revelation","Kennon, J. L.",en,22110
-652,"Rasselas, Prince of Abyssinia","Johnson, Samuel, 1709-1784",en,37997
-655,Life and Letters of Robert Browning,"Orr, Sutherland, Mrs., 1828-1903; Browning, Robert, 1812-1889",en,114521
-671,"Phil, the Fiddler","Alger, Horatio, Jr., 1832-1899",en,42578
-703,Lucasta,"Lovelace, Richard, 1618-1658",en,63542
-743,"Thoughts on Man, His Nature, Productions and Discoveries
-Interspersed with Some Particulars Respecting the Author","Godwin, William, 1756-1836",en,116130
-754,The Story of Mankind,"Van Loon, Hendrik Willem, 1882-1944",en,129220
-767,Agnes Grey,"Brontë, Anne, 1820-1849",en,67831
-776,Hermione and Her Little Group of Serious Thinkers,"Marquis, Don, 1878-1937",en,31698
-789,The Gathering of Brother Hilarius,"Fairless, Michael, 1869-1901",en,27541
-812,"Catalan's Constant to 1,500,000 Places",,en,19394
-821,Dombey and Son,"Dickens, Charles, 1812-1870",en,354937
-838,"Jasmin: Barber, Poet, Philanthropist","Smiles, Samuel, 1812-1904",en,81455
-860,Baby Mine,"Mayo, Margaret, 1882-1951",en,47293
-863,The Mysterious Affair at Styles,"Christie, Agatha, 1890-1976",en,56535
-901,The Jew of Malta,"Marlowe, Christopher, 1564-1593",en,25829
-902,"The Happy Prince, and Other Tales","Wilde, Oscar, 1854-1900",en,16372
-1619,La Celestina,"Rojas, Fernando de, -1541",es,109865
-2146,Egmont,"Goethe, Johann Wolfgang von, 1749-1832",de,25645
-2999,A l'ombre des jeunes filles en fleurs — Deuxième partie,"Proust, Marcel, 1871-1922",fr,64432
-3062,Römische Geschichte — Buch 3,"Mommsen, Theodor, 1817-1903",de,170897
-3456,Le tour du monde en quatre-vingts jours,"Verne, Jules, 1828-1905",fr,75497
-3645,L'Étourdi ou les contre-temps,"Molière, 1622-1673",fr,22080
-4501,"Gockel, Hinkel und Gackeleia","Brentano, Clemens, 1778-1842",de,61580
-5258,Ainsi Parlait Zarathoustra,"Nietzsche, Friedrich Wilhelm, 1844-1900",fr,104112
-5781,Le grand Meaulnes,"Alain-Fournier, 1886-1914",fr,64319
-5880,Reina Valera New Testament of the Bible 1865,"Reina, Casiodoro de, 1520?-1594 [Translator]; Valera, Cipriano de, 1532?-1625 [Translator]",es,61777
-6319,Bric-à-brac,"Dumas, Alexandre, 1802-1870",fr,48546
+66,The Dawn of Amateur Radio in the U.K. and Greece: A Personal View,"Joly, Norman F.",en,31949
+93,"Tom Sawyer, Detective","Twain, Mark, 1835-1910",en,24550
+95,The prisoner of Zenda,"Hope, Anthony, 1863-1933",en,55137
+103,Around the World in Eighty Days,"Verne, Jules, 1828-1905; Towle, George M. (George Makepeace), 1841-1893 [Translator]",en,64344
+105,Persuasion,"Austen, Jane, 1775-1817",en,84213
+134,"Maria; Or, The Wrongs of Woman","Wollstonecraft, Mary, 1759-1797",en,45802
+161,Sense and Sensibility,"Austen, Jane, 1775-1817",en,120868
+220,The Secret Sharer,"Conrad, Joseph, 1857-1924",en,16945
+221,The Return of Sherlock Holmes,"Doyle, Arthur Conan, 1859-1930",en,114502
+234,Child Christopher and Goldilind the Fair,"Morris, William, 1834-1896",en,49430
+266,"Confessio Amantis; Or, Tales of the Seven Deadly Sins","Gower, John, 1325?-1408; Macaulay, G. C. (George Campbell), 1852-1915 [Editor]",en,211174
+291,The Golden Age,"Grahame, Kenneth, 1859-1932",en,37280
+313,Children of the Night,"Robinson, Edwin Arlington, 1869-1935",en,12794
+318,John Barleycorn,"London, Jack, 1876-1916",en,66126
+331,The Mucker,"Burroughs, Edgar Rice, 1875-1950",en,126235
+354,The Story of a Pioneer,"Shaw, Anna Howard, 1847-1919; Jordan, Elizabeth Garver, 1867-1947",en,87834
+365,The Land of Little Rain,"Austin, Mary, 1868-1934",en,35952
+379,Worldly Ways & Byways,"Gregory, Eliot, 1854-1915",en,65288
+383,"She Stoops to Conquer; Or, The Mistakes of a Night: A Comedy","Goldsmith, Oliver, 1730?-1774",en,23689
+451,The Shadow Line: A Confession,"Conrad, Joseph, 1857-1924",en,40433
+458,Dreams and Dust,"Marquis, Don, 1878-1937",en,17785
+461,The Quest of the Golden Girl: A Romance,"Le Gallienne, Richard, 1866-1947",en,52561
+467,The Princess of Cleves,"La Fayette, Madame de (Marie-Madeleine Pioche de La Vergne), 1634-1693",en,62138
+475,"In Darkest England, and the Way Out","Booth, William, 1829-1912",en,126943
+476,"James Nasmyth, Engineer: An Autobiography","Nasmyth, James, 1808-1890; Smiles, Samuel, 1812-1904 [Editor]",en,147093
+477,Criminal Sociology,"Ferri, Enrico, 1856-1929",en,77501
+555,The Unbearable Bassington,"Saki, 1870-1916",en,48988
+561,The Further Adventures of Robinson Crusoe,"Defoe, Daniel, 1661?-1731",en,100886
+564,The Mystery of Edwin Drood,"Dickens, Charles, 1812-1870",en,97988
+653,"The Chimes
+A Goblin Story of Some Bells That Rang an Old Year out and a New Year In","Dickens, Charles, 1812-1870",en,31570
+656,Life of Robert Browning,"Sharp, William, 1855-1905",en,68949
+674,Plutarch: Lives of the noble Grecians and Romans,"Plutarch, 46-120?; Clough, Arthur Hugh, 1819-1861 [Editor]",en,744674
+705,The Roadmender,"Fairless, Michael, 1869-1901",en,25399
+744,The golden mean,"Bonnell, Jerry T.; Nemiroff, Robert J.",en,12534
+755,A Lady's Life in the Rocky Mountains,"Bird, Isabella L. (Isabella Lucy), 1831-1904",en,75150
+768,Wuthering Heights,"Brontë, Emily, 1818-1848",en,119372
+777,The mastery of the air,"Claxton, William J.",en,48205
+790,Lady Windermere's Fan,"Wilde, Oscar, 1854-1900",en,20610
+813,"Reminiscences of Tolstoy, by His Son","Tolstoi, Ilia Lvovich, graf, 1866-1933; Calderon, George, 1868-1915 [Translator]",en,25349
+822,The Tarn of Eternity,"Tymon, Frank",en,70653
+839,New Arabian Nights,"Stevenson, Robert Louis, 1850-1894",en,103226
+861,The Dominion of the Air: The Story of Aerial Navigation,"Bacon, John M. (John Mackenzie), 1846-1904",en,90921
+864,The Master of Ballantrae: A Winter's Tale,"Stevenson, Robert Louis, 1850-1894",en,88084
+902,"The Happy Prince, and Other Tales","Wilde, Oscar, 1854-1900",en,16562
+903,The White Company,"Doyle, Arthur Conan, 1859-1930",en,153227
+1619,La Celestina,"Rojas, Fernando de, -1541",es,106892
+2146,Egmont,"Goethe, Johann Wolfgang von, 1749-1832",de,25978
+2999,A l'ombre des jeunes filles en fleurs — Deuxième partie,"Proust, Marcel, 1871-1922",fr,70277
+3062,Römische Geschichte — Buch 3,"Mommsen, Theodor, 1817-1903",de,170622
+3456,Le tour du monde en quatre-vingts jours,"Verne, Jules, 1828-1905",fr,82136
+3645,L'Étourdi ou les contre-temps,"Molière, 1622-1673",fr,21266
+4501,"Gockel, Hinkel und Gackeleia","Brentano, Clemens, 1778-1842",de,62354
+5258,Ainsi Parlait Zarathoustra,"Nietzsche, Friedrich Wilhelm, 1844-1900",fr,110941
+5781,Le grand Meaulnes,"Alain-Fournier, 1886-1914",fr,68821
+5880,Reina Valera New Testament of the Bible 1865,"Reina, Casiodoro de, 1520?-1594 [Translator]; Valera, Cipriano de, 1532?-1625 [Translator]",es,61614
+6319,Bric-à-brac,"Dumas, Alexandre, 1802-1870",fr,52292
 6343,"Kritik der reinen Vernunft
-Zweite hin und wieder verbesserte Auflage (1787)","Kant, Immanuel, 1724-1804",de,184917
-6833,"Der Waldbruder, ein Pendant zu Werthers Leiden","Lenz, Jakob Michael Reinhold, 1751-1792",de,10291
-6975,Macbeth,"Shakespeare, William, 1564-1616; Tieck, Dorothea, 1799-1841 [Translator]",de,17344
-7292,Leben und Tod des Königs Johann,"Shakespeare, William, 1564-1616; Wieland, Christoph Martin, 1733-1813 [Translator]",de,23357
-7770,Les quarante-cinq — Tome 1,"Dumas, Alexandre, 1802-1870; Maquet, Auguste, 1813-1888",fr,81906
-7933,König Heinrich der vierte. Der Erste Theil,"Shakespeare, William, 1564-1616; Wieland, Christoph Martin, 1733-1813 [Translator]",de,21909
-8698,O Livro de Cesario Verde,"Verde, Cesário, 1855-1886; Silva Pinto, Antonio da, 1848-1911 [Compiler]",pt,14362
-8738,Fasti,"Ovid, 44 BCE-18?; Keightley, Thomas, 1789-1872 [Annotator]",la,97833
-8804,Drie Vertellingen,"Flaubert, Gustave, 1821-1880; Koenen, Marie, 1879-1959 [Translator]",nl,32613
-8864,Mémoires secrets de Fournier l'Américain,"Fournier, Claude, 1745-1825; Aulard, F.-A. (François-Alphonse), 1849-1928 [Annotator]",fr,34681
-9065,Beatrice,"Heyse, Paul, 1830-1914",de,20150
-9335,Fabeln und Erzählungen,"Gellert, Christian Fürchtegott, 1715-1769",de,32631
-9639,La dame de Monsoreau — Tome 3.,"Dumas, Alexandre, 1802-1870; Maquet, Auguste, 1813-1888",fr,81606
-9645,Quatrevingt-Treize,"Hugo, Victor, 1802-1885",fr,112930
-9654,Lendas e Narrativas (Tomo I),"Herculano, Alexandre, 1810-1877",pt,55785
-9894,"Histoire de la Révolution française, Tome 02","Thiers, Adolphe, 1797-1877",fr,105157
-9977,Berlin — Panorama einer Weltstadt,"Gutzkow, Karl, 1811-1878",de,44198
-10055,Hamburgische Dramaturgie,"Lessing, Gotthold Ephraim, 1729-1781",de,151071
+Zweite hin und wieder verbesserte Auflage (1787)","Kant, Immanuel, 1724-1804",de,185283
+6833,"Der Waldbruder, ein Pendant zu Werthers Leiden","Lenz, Jakob Michael Reinhold, 1751-1792",de,10405
+6975,Macbeth,"Shakespeare, William, 1564-1616; Tieck, Dorothea, 1799-1841 [Translator]",de,17490
+7292,Leben und Tod des Königs Johann,"Shakespeare, William, 1564-1616; Wieland, Christoph Martin, 1733-1813 [Translator]",de,23509
+7770,Les quarante-cinq — Tome 1,"Dumas, Alexandre, 1802-1870; Maquet, Auguste, 1813-1888",fr,85282
+7933,König Heinrich der vierte. Der Erste Theil,"Shakespeare, William, 1564-1616; Wieland, Christoph Martin, 1733-1813 [Translator]",de,22246
+8698,O Livro de Cesario Verde,"Verde, Cesário, 1855-1886; Silva Pinto, Antonio da, 1848-1911 [Compiler]",pt,14898
+8738,Fasti,"Ovid, 44 BCE-18?; Keightley, Thomas, 1789-1872 [Annotator]",la,98826
+8804,Drie Vertellingen,"Flaubert, Gustave, 1821-1880; Koenen, Marie, 1879-1959 [Translator]",nl,32898
+8864,Mémoires secrets de Fournier l'Américain,"Fournier, Claude, 1745-1825; Aulard, F.-A. (François-Alphonse), 1849-1928 [Annotator]",fr,37459
+9065,Beatrice,"Heyse, Paul, 1830-1914",de,20237
+9335,Fabeln und Erzählungen,"Gellert, Christian Fürchtegott, 1715-1769",de,32596
+9639,La dame de Monsoreau — Tome 3.,"Dumas, Alexandre, 1802-1870; Maquet, Auguste, 1813-1888",fr,88482
+9645,Quatrevingt-Treize,"Hugo, Victor, 1802-1885",fr,122481
+9654,Lendas e Narrativas (Tomo I),"Herculano, Alexandre, 1810-1877",pt,57782
+9894,"Histoire de la Révolution française, Tome 02","Thiers, Adolphe, 1797-1877",fr,113287
+9977,Berlin — Panorama einer Weltstadt,"Gutzkow, Karl, 1811-1878",de,44411
+10055,Hamburgische Dramaturgie,"Lessing, Gotthold Ephraim, 1729-1781",de,152076
 10113,"De mannen van '80 aan het woord
-Een onderzoek vaar eenige beginselen van de ""Nieuwe-Gids""-school.","D'Oliveira, E. (Elias), 1886-1944",nl,37084
-10218,Stauder,"Brandt, G. N. (Gudmund Nyeland), 1878-1945",da,31927
-10334,Van 't  viooltje dat weten wilde,"Marx-Koning, Marie, 1864-1926",nl,34159
-10346,C'Était ainsi...,"Buysse, Cyriel, 1859-1932",fr,67043
-10481,Rautatie,"Aho, Juhani, 1861-1921",fi,23611
-10506,"Romance de lobos, comedia barbara","Valle-Inclán, Ramón del, 1866-1936",es,23007
-11206,Compendio di Chimica Fisiologica,"Cominelli, A. (Alfredo)",it,18588
-11492,Il Tenente dei Lancieri: Romanzo,"Rovetta, Gerolamo, 1854-1910",it,33064
-12008,Geerten Basse,"Monteyne, Lode, 1886-1959",nl,19562
-12113,Eine vornehme Frau,"Heiberg, Hermann, 1840-1910",de,58835
-12339,Hendes Højhed,"Bang, Herman, 1857-1912",da,17098
-12459,Contes et poésies de Prosper Jourdan: 1854-1866,"Jourdan, Prosper, 1840-1866",fr,33356
-12499,Förbannelse över de otrogna!,"Heller, Frank, 1886-1947",sv,23291
-12796,Lea; Margareta,"Kivi, Aleksis, 1834-1872",fi,12673
-12822,De Edda,"Berding, Frans [Adapter]",nl,45326
-13164,Murtovarkaus; Roinilan talossa,"Canth, Minna, 1844-1897",fi,30724
-13165,Papin perhe; Hän on Sysmästä; Spiritistinen istunto,"Canth, Minna, 1844-1897",fi,31930
-13187,"Dialogue aux enfers entre Machiavel et Montesquieu
-ou la politique de Machiavel au XIXe Siècle par un contemporain","Joly, Maurice, 1831-1878",fr,60685
-13456,Les deux nigauds,"Ségur, Sophie, comtesse de, 1799-1874",fr,49825
-13492,Viajes por Europa y América,"Petano y Mazariegos, Gorgonio",es,55569
-13562,Ghislaine,"Malot, Hector, 1830-1907",fr,87706
-13734,"Jim Harrison, boxeur","Doyle, Arthur Conan, 1859-1930",fr,98290
-13771,"Aventures de Monsieur Pickwick, Vol. I","Dickens, Charles, 1812-1870; Grolier, Pierre [Translator]",fr,151590
-13874,Rauhan erakko,"Aho, Juhani, 1861-1921",fi,23102
-14038,"La Daniella, Vol. II.","Sand, George, 1804-1876",fr,94362
-14050,Daniel Hjort: Sorgespel i fem akter med fyra tablåer,"Wecksell, J. J. (Josef Julius), 1838-1907",sv,16866
+Een onderzoek vaar eenige beginselen van de ""Nieuwe-Gids""-school.","D'Oliveira, E. (Elias), 1886-1944",nl,37437
+10218,Stauder,"Brandt, G. N. (Gudmund Nyeland), 1878-1945",da,32520
+10334,Van 't  viooltje dat weten wilde,"Marx-Koning, Marie, 1864-1926",nl,34401
+10346,C'Était ainsi...,"Buysse, Cyriel, 1859-1932",fr,71806
+10481,Rautatie,"Aho, Juhani, 1861-1921",fi,22919
+10506,"Romance de lobos, comedia barbara","Valle-Inclán, Ramón del, 1866-1936",es,23050
+11206,Compendio di Chimica Fisiologica,"Cominelli, A. (Alfredo)",it,20277
+11492,Il Tenente dei Lancieri: Romanzo,"Rovetta, Gerolamo, 1854-1910",it,34385
+12008,Geerten Basse,"Monteyne, Lode, 1886-1959",nl,19328
+12113,Eine vornehme Frau,"Heiberg, Hermann, 1840-1910",de,59239
+12339,Hendes Højhed,"Bang, Herman, 1857-1912",da,17207
+12447,Pauline,"Sand, George, 1804-1876",fr,29138
+12499,Förbannelse över de otrogna!,"Heller, Frank, 1886-1947",sv,23506
+12796,Lea; Margareta,"Kivi, Aleksis, 1834-1872",fi,12810
+12822,De Edda,"Berding, Frans [Adapter]",nl,45810
+13149,Hélika: Memoire d'un vieux maître d'école,"DeGuise, Charles, 1827-1884",fr,62343
+13164,Murtovarkaus; Roinilan talossa,"Canth, Minna, 1844-1897",fi,31156
+13165,Papin perhe; Hän on Sysmästä; Spiritistinen istunto,"Canth, Minna, 1844-1897",fi,32831
+13431,André,"Sand, George, 1804-1876",fr,67720
+13492,Viajes por Europa y América,"Petano y Mazariegos, Gorgonio",es,55697
+13557,"Cent-vingt jours de service actif
+Récit Historique Très Complet de la Campagne du 65ème au Nord-Ouest","Daoust, Charles R. (Charles Roger), 1865-1924",fr,54362
+13727,Les Pardaillan — Tome 06 : Les amours du Chico,"Zévaco, Michel, 1860-1918",fr,110466
+13765,Le mystère de la chambre jaune,"Leroux, Gaston, 1868-1927",fr,89879
+13874,Rauhan erakko,"Aho, Juhani, 1861-1921",fi,23122
+14030,Un drame au Labrador,"Dick, Vinceslas-Eugène, 1848-1919",fr,46468
+14050,Daniel Hjort: Sorgespel i fem akter med fyra tablåer,"Wecksell, J. J. (Josef Julius), 1838-1907",sv,16969

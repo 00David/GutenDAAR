@@ -16,7 +16,7 @@ export default function ResultRow({ result, rank }: ResultRowProps) {
   return (
     <li>
       <Link to={`/book/${result.id}`} className={styles.row}>
-        <Cover coverUrl={result.bookCoverEndpoint} title={title} className={styles.cover} />
+        <Cover bookId={result.id} title={title} className={styles.cover} />
         <div className={styles.body}>
           <h3 className={styles.title}>
             <span className={styles.rank}>{rank}.</span>

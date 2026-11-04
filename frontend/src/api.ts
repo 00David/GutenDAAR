@@ -38,8 +38,6 @@ export interface Book {
   closenessCentrality: number | null
   betweennessCentrality: number | null
   pagerankCentrality: number | null
-  bookCoverEndpoint: string
-  gutenbergUrl: string
 }
 
 /** One book of the search results. */
@@ -51,7 +49,6 @@ export interface SearchResult {
   closenessCentrality: number | null
   betweennessCentrality: number | null
   pagerankCentrality: number | null
-  bookCoverEndpoint: string
   score: number
 }
 
@@ -113,4 +110,8 @@ export function getBook(id: number, signal?: AbortSignal): Promise<Book> {
 
 export function getNeighbours(id: number, signal?: AbortSignal): Promise<Book[]> {
   return getJson<Book[]>(`/api/books/${id}/neighbours`, signal)
+}
+
+export function bookCoverUrl(id: number): string {
+  return apiUrl('/api/books/' + id + '/cover')
 }
