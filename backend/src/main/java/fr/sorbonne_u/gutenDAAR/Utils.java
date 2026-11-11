@@ -35,12 +35,21 @@ public final class Utils {
     /**
      * Normalize a word like an indexed term.
      *
-     * <p>Must stay identical to the tokenization of the books.</p>
-     *
      * @param word      The word to normalize.
      * @return          The normalized word.
      */
     public static String normalize(String word) {
         return word.strip().toLowerCase(Locale.ROOT);
+    }
+
+    /**
+     * Separate a string according to {@link Settings#WORD_SEPARATORS}, used for getting
+     * book text words.
+     *
+     * @param string      The string to separate.
+     * @return            The separated words.
+     */
+    public static String[] separateWords(String string) {
+        return Settings.WORD_SEPARATORS.split(string);
     }
 }

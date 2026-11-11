@@ -14,8 +14,6 @@ import { findMode, findRanking, searchUrl } from '../modes'
 import styles from '../css/SearchPage.module.css'
 
 const PAGE_SIZE = 20
-/** Number of matched words shown in the stats line. */
-const SHOWN_WORDS = 20
 
 /** Result of the last request, tagged with the search it answers. */
 interface Loaded {
@@ -25,24 +23,24 @@ interface Loaded {
 }
 
 /**
- * Home and results page. The search lives in the URL (?q=…&mode=…&rank=…&page=…), so the browser back button,
+ * Home and results page. The search lives in the URL (?query=…&mode=…&ranking=…&page=…), so the browser back button,
  * bookmarks and shared links all work.
  */
 export default function SearchPage() {
   const [params, setParams] = useSearchParams()
   const navigate = useNavigate()
-  const query = params.get('q')?.trim() ?? ''
+  const query = params.get('query')?.trim() ?? ''
   const mode = findMode(params.get('mode'))
-  const rank = findRanking(params.get('rank'))
+  const ranking = findRanking(params.get('ranking'))
   const page = Math.max(0, Number(params.get('page')) || 0)
 
-  const key = `${mode.key}|${query}|${rank.key}|${page}`
+  const key = `${mode.key}|${query}|${ranking.key}|${page}`
   const [loaded, setLoaded] = useState<Loaded | null>(null)
 
   useEffect(() => {
     if (!query) return
     const controller = new AbortController()
-    search(mode.endpoint, query, rank.key, page, PAGE_SIZE, controller.signal)
+    search(mode.endpoint, query, ranking.key, page, PAGE_SIZE, controller.signal)
       .then((data) => setLoaded({ key, data }))
       .catch((e: unknown) => {
         if (!controller.signal.aborted) {
@@ -51,7 +49,7 @@ export default function SearchPage() {
       })
     // a newer search cancels the previous request, so an old answer never overwrites a new one
     return () => controller.abort()
-  }, [key, query, rank.key, page, mode.endpoint])
+  }, [key, query, ranking.key, page, mode.endpoint])
 
   const onSearch = (q: string, m: string, r: string) => navigate(searchUrl(q, m, r))
 
@@ -63,7 +61,7 @@ export default function SearchPage() {
           <Logo />
         </h1>
         <p className={styles.tagline}>Search engine over <i>Project Gutenberg</i> books</p>
-        <SearchBar large initialMode={mode.key} initialRank={rank.key} onSearch={onSearch} />
+        <SearchBar large initialMode={mode.key} initialRanking={ranking.key} onSearch={onSearch} />
       </main>
     )
   }
@@ -80,7 +78,7 @@ export default function SearchPage() {
 
   return (
     <>
-      <Header query={query} mode={mode.key} rank={rank.key} />
+      <Header query={query} mode={mode.key} ranking={ranking.key} />
       <main className={styles.main}>
         {!current && <Spinner label="Searching…" />}
         {current?.error && <ErrorBox message={current.error} />}
@@ -89,16 +87,6 @@ export default function SearchPage() {
           <>
             <p className={styles.stats}>
               <span className={styles.total}>{plural(data.total, 'book')}</span> · {data.timeMs.toFixed(1)} ms
-              {data.matchedWords.length > 0 && (
-                <>
-                  {' '}
-                  · matched:{' '}
-                  <span className={styles.words}>
-                    {data.matchedWords.slice(0, SHOWN_WORDS).join(', ')}
-                    {data.matchedWords.length > SHOWN_WORDS && ` … (+${data.matchedWords.length - SHOWN_WORDS})`}
-                  </span>
-                </>
-              )}
             </p>
 
             <div className={styles.layout}>
@@ -111,7 +99,7 @@ export default function SearchPage() {
                 ) : (
                   <ol className={styles.list}>
                     {data.results.map((r, i) => (
-                      <ResultRow key={r.id} result={r} rank={data.page * data.size + i + 1} />
+                      <ResultRow key={r.id} ranking={ranking} result={r} rank={data.page * data.size + i + 1} />
                     ))}
                   </ol>
                 )}

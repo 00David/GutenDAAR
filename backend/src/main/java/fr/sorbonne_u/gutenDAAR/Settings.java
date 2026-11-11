@@ -8,6 +8,7 @@ import java.net.http.HttpClient;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Define global settings for the backend application.
@@ -21,6 +22,9 @@ public final class Settings {
 
     /** Number of processed books between two progress bar logs. */
     public static final int PROGRESS_BAR_STEP = 20;
+
+    /** Separators between words: anything that is not a letter (accents included) or a digit. */
+    public static final Pattern WORD_SEPARATORS = Pattern.compile("[^\\p{L}\\p{M}\\p{N}]+");
 
     /* SETUP PART */
 

@@ -39,11 +39,6 @@
   color: var(--gray-900);
 }
 
-.words {
-  font-family: var(--font-mono);
-  color: var(--gray-800);
-}
-
 /* phone: results, then recommendations under them.
    minmax(0, 1fr) and min-width: 0 stop long titles from making the page wider than the screen. */
 .layout {

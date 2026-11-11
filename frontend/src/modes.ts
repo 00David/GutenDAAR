@@ -47,9 +47,9 @@ export interface Ranking {
 
 export const RANKINGS: Ranking[] = [
   { key: 'occurrences', label: 'Occurrences' },
-  { key: 'pagerank', label: 'PageRank' },
   { key: 'closeness', label: 'Closeness' },
   { key: 'betweenness', label: 'Betweenness' },
+  { key: 'pagerank', label: 'PageRank' },
 ]
 
 export const DEFAULT_RANKING = RANKINGS[0]
@@ -59,7 +59,7 @@ export function findRanking(key: string | null): Ranking {
   return RANKINGS.find((r) => r.key === key) ?? DEFAULT_RANKING
 }
 
-/** URL of the results page of a search, e.g. /?q=whale&mode=keyword&rank=pagerank */
-export function searchUrl(query: string, mode: string, rank: string): string {
-  return `/?${new URLSearchParams({ q: query, mode, rank })}`
+/** URL of the results page of a search, e.g. /?query=whale&mode=keyword&ranking=pagerank */
+export function searchUrl(query: string, mode: string, ranking: string): string {
+  return `/?${new URLSearchParams({ query: query, mode, ranking })}`
 }

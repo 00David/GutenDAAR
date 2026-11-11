@@ -1,18 +1,19 @@
 import { Link } from 'react-router'
-import type { SearchResult } from '../api'
+import { getBookCentrality, type BookWithOccurrences } from '../api'
 import { formatAuthor, formatCentrality, languageName, plural, splitTitle } from '../format'
 import Cover from './Cover'
 import styles from '../css/ResultRow.module.css'
+import type { Ranking } from '../modes'
 
 interface ResultRowProps {
-  result: SearchResult
+  result: BookWithOccurrences
+  ranking: Ranking
   rank: number
 }
 
 /** One row of the search results: cover, title, author, language, and why it is ranked there. */
-export default function ResultRow({ result, rank }: ResultRowProps) {
+export default function ResultRow({ result, ranking, rank }: ResultRowProps) {
   const [title, subtitle] = splitTitle(result.title)
-
   return (
     <li>
       <Link to={`/book/${result.id}`} className={styles.row}>
@@ -27,8 +28,11 @@ export default function ResultRow({ result, rank }: ResultRowProps) {
             {formatAuthor(result.author)} · {languageName(result.language)}
           </p>
           <p className={styles.stats}>
-            <span className={styles.score}>{plural(result.score, 'occurrence')}</span>
-            <span>centrality {formatCentrality(result.pagerankCentrality)}</span>
+            {
+              ranking.key === 'occurrences'
+                ? <span className={styles.occurrences}>{plural(result.occurrences, 'occurrence')}</span>
+                : <span className={styles.centrality}>{ranking.label} {formatCentrality(getBookCentrality(result, ranking))}</span>
+            }
           </p>
         </div>
       </Link>

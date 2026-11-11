@@ -1,11 +1,11 @@
-import { useId, useState, type FormEvent } from 'react'
+import { useId, useState, type SubmitEvent } from 'react'
 import styles from '../css/SearchBar.module.css'
 import { MODES, RANKINGS, findMode, findRanking } from '../modes'
 
 interface SearchBarProps {
   initialQuery?: string
   initialMode?: string
-  initialRank?: string
+  initialRanking?: string
   /** Large centred version for the home page. */
   large?: boolean
   onSearch: (query: string, mode: string, rank: string) => void
@@ -15,17 +15,17 @@ interface SearchBarProps {
 export default function SearchBar({
   initialQuery = '',
   initialMode,
-  initialRank,
+  initialRanking,
   large = false,
   onSearch,
 }: SearchBarProps) {
   const [query, setQuery] = useState(initialQuery)
   const [modeKey, setModeKey] = useState(findMode(initialMode ?? null).key)
-  const [rankKey, setRankKey] = useState(findRanking(initialRank ?? null).key)
+  const [rankKey, setRankKey] = useState(findRanking(initialRanking ?? null).key)
   const mode = findMode(modeKey)
   const rankLabelId = useId()
 
-  function submit(e: FormEvent) {
+  function submit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
     const q = query.trim()
     if (q) onSearch(q, mode.key, rankKey)

@@ -7,11 +7,11 @@ import SearchBar from './SearchBar'
 interface HeaderProps {
   query?: string
   mode?: string
-  rank?: string
+  ranking?: string
 }
 
 /** Top bar with the logo and a compact search bar, on every page except the empty home. */
-export default function Header({ query, mode, rank }: HeaderProps) {
+export default function Header({ query, mode, ranking }: HeaderProps) {
   const navigate = useNavigate()
 
   return (
@@ -22,10 +22,10 @@ export default function Header({ query, mode, rank }: HeaderProps) {
         </Link>
         <SearchBar
           // remount when the URL changes (e.g. browser back), so the inputs show the current search
-          key={`${query}|${mode}|${rank}`}
+          key={`${query}|${mode}|${ranking}`}
           initialQuery={query}
           initialMode={mode}
-          initialRank={rank}
+          initialRanking={ranking}
           onSearch={(q, m, r) => navigate(searchUrl(q, m, r))}
         />
       </div>

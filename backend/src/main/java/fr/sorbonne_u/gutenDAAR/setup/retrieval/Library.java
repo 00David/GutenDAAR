@@ -29,8 +29,6 @@ public class Library {
     /** Logger. */
     protected static final Logger LOG = LoggerFactory.getLogger(Library.class);
 
-    /** Separators between words: anything that is not a letter (accents included) or a digit. */
-    protected static final Pattern WORD_SEPARATORS = Pattern.compile("[^\\p{L}\\p{M}\\p{N}]+");
     /** The treated book text content starts after the line accepting this pattern. */
     protected static final Pattern START_TEXT = Pattern.compile("^\\*\\*\\* START");
     /** The treated book text content stops before the line accepting this pattern. */
@@ -102,7 +100,7 @@ public class Library {
                     break; // stop at the end marker line (not taking it into account)
                 }
 
-                for (String word : WORD_SEPARATORS.split(line)) {
+                for (String word : Utils.separateWords(line)) {
                     if (word.isEmpty()) {
                         continue;
                     }

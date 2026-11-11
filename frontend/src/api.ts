@@ -5,7 +5,9 @@
  * (the backend serving the built frontend, or the Vite dev proxy). For a frontend running on another
  * machine of the LAN, set VITE_API_URL (e.g. VITE_API_URL=http://192.168.1.20:8080).
  */
-const API_URL: string = import.meta.env.VITE_API_URL ?? ''
+import type { Ranking } from './modes'
+
+const API_URL: string =import.meta.env.VITE_API_URL ?? ''
 
 /** Absolute URL of an API path. */
 export function apiUrl(path: string): string {
@@ -40,28 +42,38 @@ export interface Book {
   pagerankCentrality: number | null
 }
 
-/** One book of the search results. */
-export interface SearchResult {
-  id: number
-  title: string
-  author: string | null
-  language: string
-  closenessCentrality: number | null
-  betweennessCentrality: number | null
-  pagerankCentrality: number | null
-  score: number
+/** One book of the search results, with the number of occurrences of the searched query in it. */
+export interface BookWithOccurrences extends Book {
+  occurrences: number
+}
+
+/**
+ * Centrality of a book used by a centrality ranking.
+ * @returns the centrality, or null if it is not computed yet or if the ranking is not a centrality (occurrences)
+ */
+export function getBookCentrality(book: Book, ranking: Ranking): number | null {
+  switch (ranking.key) {
+    case 'closeness':
+      return book.closenessCentrality
+    case 'betweenness':
+      return book.betweennessCentrality
+    case 'pagerank':
+      return book.pagerankCentrality
+    default:
+      return null
+  }
 }
 
 /** Response of every search endpoint. */
 export interface SearchResponse {
   query: string
-  mode: string
+  searchMode: string
+  rankingMethod: string
   timeMs: number
   total: number
   page: number
   size: number
-  matchedWords: string[]
-  results: SearchResult[]
+  results: BookWithOccurrences[]
   recommendations: Book[]
 }
 
@@ -93,14 +105,14 @@ async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {
 
 /** Run a search on the endpoint of the given mode, ranked by the given criterion. */
 export function search(
-  endpoint: string,
-  query: string,
-  rank: string,
-  page: number,
-  size: number,
-  signal?: AbortSignal,
+    endpoint: string,
+    query: string,
+    ranking: string,
+    page: number,
+    size: number,
+    signal?: AbortSignal,
 ): Promise<SearchResponse> {
-  const params = new URLSearchParams({ q: query, rank, page: String(page), size: String(size) })
+  const params = new URLSearchParams({ query, ranking: ranking, page: String(page), size: String(size) })
   return getJson<SearchResponse>(`${endpoint}?${params}`, signal)
 }
 

@@ -5,9 +5,9 @@ package fr.sorbonne_u.gutenDAAR.search;
  */
 public enum SearchMode {
     /** Search by keyword, on indexed book words. */
-    KEYWORD,
+    keyword,
     /** Search by regular expression, on indexed book words. */
-    REGEX_WORDS,
-    /** Search by regular expression, on all book words. */
-    REGEX_FULL_TEXT
+    regex,
+    /** Search by regular expression, on the full text of books. */
+    fulltext;
 }

@@ -6,7 +6,7 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 /**
  * Log every HTTP request received by the server, once, before it is handled.
- * For instance: {@code Request received on 'GET /api/search/keyword?q=whale'}.
+ * For instance: {@code Request received on 'GET /api/search/keyword?query=whale&rank=occurrences'}.
  *
  * <p>
  * Based on Spring's {@link CommonsRequestLoggingFilter}: logging is done at the info level
