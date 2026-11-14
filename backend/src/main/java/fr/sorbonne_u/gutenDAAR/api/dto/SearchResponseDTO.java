@@ -20,4 +20,4 @@ import java.util.List;
  */
 public record SearchResponseDTO(String query, SearchMode searchMode, RankingMethod rankingMethod, double timeMs,
                                 int total, int page, int size,
-                                List<BookDTOWithOccurrences> results, List<BookDTO> recommendations) {}
+                                List<BookSearchedDTO> results, List<BookDTO> recommendations) {}

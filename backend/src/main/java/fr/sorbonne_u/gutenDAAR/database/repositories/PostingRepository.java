@@ -15,6 +15,13 @@ import java.util.Set;
 public interface PostingRepository extends JpaRepository<Posting, Posting.PostingId> {
 
     /**
+     * Find the posting of a book.
+     * @param bookId      The book (id) to look up.
+     * @return            The postings of the book, in no particular order.
+     */
+    List<Posting> findByBookId(Integer bookId);
+
+    /**
      * Find the postings of a term, i.e. the books containing it with their occurrences.
      * Uses the inverted index {@code idx_postings_term}.
      * @param term      The term to look up.
@@ -40,6 +47,6 @@ public interface PostingRepository extends JpaRepository<Posting, Posting.Postin
 
     /** Refresh the planner statistics of the {@code postings} table. Requires a transaction. */
     @Modifying
-    @Query(value = "ANALYZE postings", nativeQuery = true)
+    @Query(value = "VACUUM ANALYZE postings", nativeQuery = true)
     void analyze();
 }

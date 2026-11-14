@@ -46,7 +46,7 @@ export interface Ranking {
 }
 
 export const RANKINGS: Ranking[] = [
-  { key: 'occurrences', label: 'Occurrences' },
+  { key: 'occurrences', label: 'Occurrences' }, // Only applicable to keyword search mode (findMode(keyword))
   { key: 'closeness', label: 'Closeness' },
   { key: 'betweenness', label: 'Betweenness' },
   { key: 'pagerank', label: 'PageRank' },

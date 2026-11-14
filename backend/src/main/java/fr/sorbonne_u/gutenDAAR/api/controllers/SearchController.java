@@ -3,7 +3,7 @@ package fr.sorbonne_u.gutenDAAR.api.controllers;
 import fr.sorbonne_u.gutenDAAR.Settings;
 import fr.sorbonne_u.gutenDAAR.Utils;
 import fr.sorbonne_u.gutenDAAR.api.dto.BookDTO;
-import fr.sorbonne_u.gutenDAAR.api.dto.BookDTOWithOccurrences;
+import fr.sorbonne_u.gutenDAAR.api.dto.BookSearchedDTO;
 import fr.sorbonne_u.gutenDAAR.api.dto.SearchResponseDTO;
 import fr.sorbonne_u.gutenDAAR.database.services.BookService;
 import fr.sorbonne_u.gutenDAAR.search.*;
@@ -14,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Search endpoints: one endpoint per search algorithm, all returning a {@link SearchResponseDTO}.
@@ -30,21 +31,21 @@ import java.util.Set;
 public class SearchController {
 
     /** The injected keyword search service. */
-    protected final SearchService keywordSearch;
+    protected final SearchService search;
     /** The injected recommendation service. */
     protected final RecommendationService recommendations;
     /** The injected book service. */
     protected final BookService bookService;
 
-    public SearchController(SearchService keywordSearch, RecommendationService recommendations,
+    public SearchController(SearchService search, RecommendationService recommendations,
                             BookService bookService) {
-        this.keywordSearch = keywordSearch;
+        this.search = search;
         this.recommendations = recommendations;
         this.bookService = bookService;
     }
 
     /**
-     * Keyword search: the books whose index table contains the keyword.
+     * Keyword search: the books whose indexed terms correspond to the keyword.
      * @param query                     The keyword, a single word.
      * @param ranking                   The ranking method to apply, as a string.
      * @param page                      The page number, from 0.
@@ -69,20 +70,90 @@ public class SearchController {
         RankingMethod rankingMethod = getRankingEnumeration(ranking);
         checkPaging(page, size);
 
-        List<BookDTOWithOccurrences> sortedResults = keywordSearch.searchByKeyword(keyword, rankingMethod);
+        List<BookSearchedDTO> sortedResults = search.searchByKeyword(keyword, rankingMethod);
         return buildResponse(query, SearchMode.keyword, rankingMethod, sortedResults, page, size, start);
+    }
+
+    /**
+     * Regex search: the books whose indexed terms match the regex.
+     * @param query                     The regex.
+     * @param ranking                   The ranking method to apply, as a string.
+     * @param page                      The page number, from 0.
+     * @param size                      The page size, from 1 to {@link Settings#MAX_PAGE_SIZE}.
+     * @return                          The ranked books of the page, with recommendations.
+     * @throws ResponseStatusException  400 if the regex is empty or invalid,
+     *                                  or the ranking method does not exist, or if the paging is invalid.
+     */
+    @GetMapping("/regex/words")
+    public SearchResponseDTO regex(@RequestParam String query,
+                                     @RequestParam String ranking,
+                                     @RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(defaultValue = "" + Settings.DEFAULT_PAGE_SIZE) int size) {
+        long start = System.nanoTime();
+        String regexStr = query.strip();
+        if (regexStr.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The regex is empty.");
+        }
+        Pattern regex = getRegex(regexStr);
+        RankingMethod rankingMethod = getRankingEnumeration(ranking);
+        checkPaging(page, size);
+
+        List<BookSearchedDTO> sortedResults = search.searchByRegex(regex, rankingMethod);
+        return buildResponse(query, SearchMode.regex, rankingMethod, sortedResults, page, size, start);
+    }
+
+    /**
+     * Full regex search: the books whose lines match the regex.
+     * @param query                     The regex.
+     * @param ranking                   The ranking method to apply, as a string.
+     * @param page                      The page number, from 0.
+     * @param size                      The page size, from 1 to {@link Settings#MAX_PAGE_SIZE}.
+     * @return                          The ranked books of the page, with recommendations.
+     * @throws ResponseStatusException  400 if the regex is empty or invalid,
+     *                                  or the ranking method does not exist, or if the paging is invalid.
+     */
+    @GetMapping("/regex/fulltext")
+    public SearchResponseDTO fulltext(@RequestParam String query,
+                                   @RequestParam String ranking,
+                                   @RequestParam(defaultValue = "0") int page,
+                                   @RequestParam(defaultValue = "" + Settings.DEFAULT_PAGE_SIZE) int size) {
+        long start = System.nanoTime();
+        String regexStr = query.strip();
+        if (regexStr.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The regex is empty.");
+        }
+        Pattern regex = getRegex(regexStr);
+        RankingMethod rankingMethod = getRankingEnumeration(ranking);
+        checkPaging(page, size);
+
+        List<BookSearchedDTO> sortedResults = search.searchByRegexFullText(regex, rankingMethod);
+        return buildResponse(query, SearchMode.regex_fulltext, rankingMethod, sortedResults, page, size, start);
     }
 
     /**
      * Convert the ranking method (as a string) to its enumeration.
      * @param methodString                  A ranking method.
-     * @return                              Its equivalent as aan enumeration.
+     * @return                              Its equivalent as an enumeration.
      * @throws ResponseStatusException      400 if not existing ranking enumeration matches the given string.
      */
     protected static RankingMethod getRankingEnumeration(String methodString) {
         try {
             return RankingMethod.from(methodString);
         } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    /**
+     * Convert the regex (as a string) to its {@link Pattern}.
+     * @param regexStr                      The regex string to convert.
+     * @return                              Its equivalent as a Java Pattern.
+     * @throws ResponseStatusException      400 if the regex is invalid.
+     */
+    protected static Pattern getRegex(String regexStr) {
+        try {
+            return Pattern.compile(regexStr);
+        } catch (PatternSyntaxException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
@@ -116,12 +187,12 @@ public class SearchController {
      * @return              The response.
      */
     protected SearchResponseDTO buildResponse(String query, SearchMode searchMode, RankingMethod rankingMethod,
-                                              List<BookDTOWithOccurrences> sortedResults,
+                                              List<BookSearchedDTO> sortedResults,
                                               int page, int size, long start) {
         // Page of results
         int from = (int) Math.min((long) page * size, sortedResults.size());
         int to = Math.min(from + size, sortedResults.size());
-        List<BookDTOWithOccurrences> sortedPageResults = sortedResults.subList(from, to);
+        List<BookSearchedDTO> sortedPageResults = sortedResults.subList(from, to);
 
         // Recommendations: neighbours of the top results, never a book of the results
         Set<Integer> topIds = new HashSet<>();
@@ -129,7 +200,7 @@ public class SearchController {
             topIds.add(sortedPageResults.get(i).book().id());
         }
         Set<Integer> resultIds = new HashSet<>();
-        for (BookDTOWithOccurrences result : sortedPageResults) {
+        for (BookSearchedDTO result : sortedPageResults) {
             resultIds.add(result.book().id());
         }
         List<BookDTO> recommended = recommendations.recommend(topIds, resultIds, Settings.MAX_RECOMMENDATIONS);

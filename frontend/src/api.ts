@@ -42,8 +42,12 @@ export interface Book {
   pagerankCentrality: number | null
 }
 
-/** One book of the search results, with the number of occurrences of the searched query in it. */
-export interface BookWithOccurrences extends Book {
+/**
+ * One book of the search results.
+ * The number of occurrences of the searched query is in it ONLY for the keyword search mode,
+ * otherwise stays at -1 (no number of occurrences provided).
+ */
+export interface BookSearched extends Book {
   occurrences: number
 }
 
@@ -73,7 +77,7 @@ export interface SearchResponse {
   total: number
   page: number
   size: number
-  results: BookWithOccurrences[]
+  results: BookSearched[]
   recommendations: Book[]
 }
 

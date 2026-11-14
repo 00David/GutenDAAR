@@ -111,8 +111,10 @@ public class DataSetup implements ApplicationRunner {
             }
 
             if (books.size() % Settings.PROGRESS_BAR_STEP == 0) {
-                LOG.atInfo().addArgument(() -> coverType)
-                        .addArgument(() -> Utils.progressBar(books.size(), catalog.size())).log("Retrieving {} book covers {}");
+                LOG.atInfo()
+                        .addArgument(() -> coverType)
+                        .addArgument(() -> Utils.progressBar(books.size(), catalog.size()))
+                        .log("Retrieving {} book covers {}");
             }
         }
         bookService.insert(books);
@@ -125,7 +127,9 @@ public class DataSetup implements ApplicationRunner {
      * @throws InterruptedException     If an interruption occurs while retrieving a book text.
      */
     protected void initBookTextsAndPostings(List<GutenDAAREntry> catalog) throws InterruptedException{
-        LOG.atInfo().addArgument(() -> Utils.progressBar(0, catalog.size())).log("Building book postings {}");
+        LOG.atInfo()
+                .addArgument(() -> Utils.progressBar(0, catalog.size()))
+                .log("Building book postings {}");
         // For each book
         for (int i = 0; i < catalog.size(); i++) {
             GutenDAAREntry book = catalog.get(i);
@@ -157,7 +161,9 @@ public class DataSetup implements ApplicationRunner {
 
             int done = i + 1;
             if (done % Settings.PROGRESS_BAR_STEP == 0) {
-                LOG.atInfo().addArgument(() -> Utils.progressBar(done, catalog.size())).log("Building book postings {}");
+                LOG.atInfo()
+                        .addArgument(() -> Utils.progressBar(done, catalog.size()))
+                        .log("Building book postings {}");
             }
         }
 

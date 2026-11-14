@@ -1,12 +1,12 @@
 import { Link } from 'react-router'
-import { getBookCentrality, type BookWithOccurrences } from '../api'
+import { getBookCentrality, type BookSearched } from '../api'
 import { formatAuthor, formatCentrality, languageName, plural, splitTitle } from '../format'
 import Cover from './Cover'
 import styles from '../css/ResultRow.module.css'
 import type { Ranking } from '../modes'
 
 interface ResultRowProps {
-  result: BookWithOccurrences
+  result: BookSearched
   ranking: Ranking
   rank: number
 }

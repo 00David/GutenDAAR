@@ -12,7 +12,10 @@ import java.util.stream.Collectors;
  * Indicate possible ranking methods.
  */
 public enum RankingMethod {
-    /** Rank by the decreasing number of occurrences. */
+    /**
+     * Rank by the decreasing number of {@link SearchMode#keyword} occurrences.
+     * Does not apply to other search modes.
+     */
     occurrences,
     /** Rank by the decreasing closeness centrality. */
     closeness,
@@ -40,7 +43,9 @@ public enum RankingMethod {
 
     /**
      * Rank the books containing a keyword by decreasing number of occurrences of this keyword.
-     * Ties are broken by book id, so that the order (and thus the pagination) is stable.
+     *
+     * <p>Ties are broken by book id, so that the order (and thus the pagination) is stable.</p>
+     *
      * @param postings                      The postings of the keyword (one per book containing it).
      * @param books                         The books of these postings, by id. Postings whose book is absent are ignored.
      * @param rankingMethod                 The ranking method, which must be {@link #occurrences}.
@@ -61,9 +66,12 @@ public enum RankingMethod {
     }
 
     /**
-     * Rank books by decreasing centrality, the centrality being the one of the given ranking method.
-     * Books whose centrality is not computed yet ({@code null}) come last. Ties are broken by book id,
-     * so that the order (and thus the pagination) is stable.
+     * Rank books by decreasing centrality,
+     * the centrality being the one of the given ranking method.
+     * Books whose centrality is not computed yet ({@code null}) come last.
+     *
+     * <p>Ties are broken by book id, so that the order (and thus the pagination) is stable.</p>
+     *
      * @param books                         The books to rank (left unchanged).
      * @param rankingMethod                 The centrality ranking method to apply.
      * @return                              A new (modifiable) list of the books, ranked by centrality.
@@ -71,6 +79,24 @@ public enum RankingMethod {
      *                                      use {@link #sortByOccurrences(Collection, Map, RankingMethod)} instead.
      */
     public static List<Book> sortByCentrality(Collection<Book> books, RankingMethod rankingMethod) {
+        List<Book> sorted = new ArrayList<>(books);
+        sortInPlaceByCentrality(sorted, rankingMethod);
+        return sorted;
+    }
+
+    /**
+     * Rank books by decreasing centrality,
+     * the centrality being the one of the given ranking method.
+     * Books whose centrality is not computed yet ({@code null}) come last.
+     *
+     * <p>Ties are broken by book id, so that the order (and thus the pagination) is stable.</p>
+     *
+     * @param books                         The books to rank (MODIFIABLE LIST, sorted after calling the method).
+     * @param rankingMethod                 The centrality ranking method to apply.
+     * @throws IllegalArgumentException     If the ranking method is {@link #occurrences}, which is not a centrality:
+     *                                      use {@link #sortByOccurrences(Collection, Map, RankingMethod)} instead.
+     */
+    public static void sortInPlaceByCentrality(List<Book> books, RankingMethod rankingMethod) {
         Function<Book, @Nullable Double> centrality = switch (rankingMethod) {
             case pagerank -> Book::getPagerankCentrality;
             case closeness -> Book::getClosenessCentrality;
@@ -78,9 +104,7 @@ public enum RankingMethod {
             case occurrences -> throw new IllegalArgumentException(
                     "occurrences is not a centrality: use sortByOccurrences instead.");
         };
-        List<Book> sorted = new ArrayList<>(books);
-        sorted.sort(Comparator.comparing(centrality, Comparator.nullsLast(Comparator.<Double>reverseOrder()))
+        books.sort(Comparator.comparing(centrality, Comparator.nullsLast(Comparator.<Double>reverseOrder()))
                 .thenComparingInt(Book::getId));
-        return sorted;
     }
 }

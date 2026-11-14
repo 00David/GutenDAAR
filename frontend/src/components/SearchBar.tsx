@@ -25,6 +25,17 @@ export default function SearchBar({
   const mode = findMode(modeKey)
   const rankLabelId = useId()
 
+  /**
+   * Indicates if the user can search, he cannot when:
+   * - ranking by occurrences is selected
+   * - and another search mode than by keyword is selected
+   * @param givenRankKey   The rank hey to consider.
+   */
+  function canSearch(givenRankKey: string): boolean {
+    return ! (givenRankKey === findRanking('occurrences').key
+        && mode !== findMode('keyword'))
+  }
+
   function submit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
     const q = query.trim()
@@ -67,7 +78,7 @@ export default function SearchBar({
             className={styles.input}
           />
         </div>
-        <button type="submit" disabled={!query.trim()} className={styles.button}>
+        <button type="submit" disabled={!query.trim() || !canSearch(rankKey)} className={styles.button}>
           Search
         </button>
       </div>
@@ -84,6 +95,7 @@ export default function SearchBar({
               value={r.key}
               checked={rankKey === r.key}
               onChange={() => chooseRank(r.key)}
+              disabled={!canSearch(r.key)}
             />
             {r.label}
           </label>

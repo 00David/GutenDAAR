@@ -1,7 +1,9 @@
 package fr.sorbonne_u.gutenDAAR.database.services;
 
 import fr.sorbonne_u.gutenDAAR.Settings;
+import fr.sorbonne_u.gutenDAAR.database.entities.Book;
 import fr.sorbonne_u.gutenDAAR.database.entities.Posting;
+import fr.sorbonne_u.gutenDAAR.database.repositories.BookRepository;
 import fr.sorbonne_u.gutenDAAR.database.repositories.PostingRepository;
 import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
@@ -9,8 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Service allowing to interact with {@link PostingRepository}.
@@ -22,11 +26,14 @@ public class PostingService {
 
     /** The injected posting repository. */
     protected final PostingRepository postingRepository;
+    /** The injected book repository. */
+    protected final BookRepository bookRepository;
     /** The injected entity manager. */
     protected final EntityManager em;
 
-    public PostingService(PostingRepository postingRepository, EntityManager em) {
+    public PostingService(PostingRepository postingRepository, BookRepository bookRepository, EntityManager em) {
         this.postingRepository = postingRepository;
+        this.bookRepository = bookRepository;
         this.em = em;
     }
 
@@ -84,9 +91,18 @@ public class PostingService {
     }
 
     /**
+     * Find the postings of a book: the indexed terms contained in it (forward index lookup).
+     * @param bookId    The book to look up.
+     * @return          The postings of the book, in no particular order.
+     */
+    public List<Posting> findByBookId(Integer bookId) {
+        return postingRepository.findByBookId(bookId);
+    }
+
+    /**
      * Find the postings of a term: the books containing it, with their occurrences (inverted index lookup).
      * @param term      The term to look up, already normalized like the indexed words.
-     * @return          The postings of the term, in no particular order, empty if the term is unknown.
+     * @return          The postings of the term, in no particular order.
      */
     public List<Posting> findByTerm(String term) {
         return postingRepository.findByTerm(term);

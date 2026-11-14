@@ -103,6 +103,11 @@ textarea::placeholder {
   cursor: pointer;
 }
 
+.rank:has(input:disabled) {
+  cursor: not-allowed;
+  color: var(--gray-400);
+}
+
 .rank input {
   accent-color: var(--accent);
 }
