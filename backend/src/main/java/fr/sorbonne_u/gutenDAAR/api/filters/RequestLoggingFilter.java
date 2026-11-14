@@ -1,4 +1,4 @@
-package fr.sorbonne_u.gutenDAAR.api;
+package fr.sorbonne_u.gutenDAAR.api.filters;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
@@ -14,9 +14,9 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
  * </p>
  */
 @Component
-public class LogConfig extends CommonsRequestLoggingFilter {
+public class RequestLoggingFilter extends CommonsRequestLoggingFilter {
 
-    public LogConfig() {
+    public RequestLoggingFilter() {
         setIncludeQueryString(true);
         setBeforeMessagePrefix("Request received on '");
         setBeforeMessageSuffix("'");

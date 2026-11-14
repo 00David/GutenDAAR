@@ -44,7 +44,7 @@ public final class Settings {
     /** Format of the CSV files, whose first line is the header. */
     public static CSVFormat CSV_FORMAT = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).get();
     /** Path of the GutenDAAR CSV catalog. */
-    public static final Path CATALOG_CSV_PATH = Path.of("data/catalog_short.csv");
+    public static final Path CATALOG_CSV_PATH = Path.of("data/catalog.csv");
     /** Folder of the book covers. */
     public static final Path COVERS_FOLDER_PATH = Path.of("data/covers");
     /** Number of books of the GutenDAAR catalog, when created. */
@@ -75,4 +75,26 @@ public final class Settings {
     public static final int RECOMMENDATION_SOURCES = 5;
     /** Maximum number of recommendations returned with a search. */
     public static final int MAX_RECOMMENDATIONS = 10;
+
+    /* THREAD POOLS PART */
+
+    /** Bean name of the executor scanning book indexed terms. */
+    public static final String REGEX_EXECUTOR = "regexExecutor";
+    /** Thread name prefix of the {@link #REGEX_EXECUTOR} threads, to recognize them in the logs. */
+    public static final String REGEX_THREAD_PREFIX = "regex-";
+    /** {@link #REGEX_EXECUTOR} number of threads. */
+    public static final int REGEX_THREADS = Runtime.getRuntime().availableProcessors();
+    /** {@link #REGEX_EXECUTOR} queue capacity, or {@code null} if not limited. */
+    public static final Integer REGEX_QUEUE_CAPACITY = null;
+
+    /** Bean name of the executor scanning book full texts. */
+    public static final String FULL_TEXT_EXECUTOR = "fullTextExecutor";
+    /** Thread name prefix of the {@link #FULL_TEXT_EXECUTOR} threads, to recognize them in the logs. */
+    public static final String FULL_TEXT_THREAD_PREFIX = "full-text-";
+    /** {@link #FULL_TEXT_EXECUTOR} number of threads. */
+    public static final int FULL_TEXT_THREADS = Runtime.getRuntime().availableProcessors();
+    /** {@link #FULL_TEXT_EXECUTOR} queue capacity, or {@code null} if not limited. */
+    public static final Integer FULL_TEXT_QUEUE_CAPACITY = null;
+
+
 }

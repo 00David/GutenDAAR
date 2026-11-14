@@ -1,4 +1,4 @@
-package fr.sorbonne_u.gutenDAAR.api;
+package fr.sorbonne_u.gutenDAAR.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

@@ -47,6 +47,6 @@ public interface PostingRepository extends JpaRepository<Posting, Posting.Postin
 
     /** Refresh the planner statistics of the {@code postings} table. Requires a transaction. */
     @Modifying
-    @Query(value = "VACUUM ANALYZE postings", nativeQuery = true)
+    @Query(value = "ANALYZE postings", nativeQuery = true)
     void analyze();
 }

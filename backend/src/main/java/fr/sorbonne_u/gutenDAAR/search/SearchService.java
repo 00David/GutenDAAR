@@ -11,11 +11,15 @@ import fr.sorbonne_u.gutenDAAR.database.services.BookTextService;
 import fr.sorbonne_u.gutenDAAR.database.services.PostingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,10 +41,20 @@ public class SearchService {
     /** The injected posting service. */
     protected final PostingService postingService;
 
-    public SearchService(PostingService postingService, BookTextService bookTextService, BookService bookService) {
+    /** The injected regex (on indexed terms) executor. */
+    protected final ThreadPoolTaskExecutor regexExecutor;
+
+    /** The injected regex full text executor. */
+    protected final ThreadPoolTaskExecutor fullTextExecutor;
+
+    public SearchService(PostingService postingService, BookTextService bookTextService, BookService bookService,
+                         @Qualifier(Settings.REGEX_EXECUTOR) ThreadPoolTaskExecutor regexExecutor,
+                         @Qualifier(Settings.FULL_TEXT_EXECUTOR) ThreadPoolTaskExecutor fullTextExecutor) {
         this.postingService = postingService;
         this.bookTextService = bookTextService;
         this.bookService = bookService;
+        this.regexExecutor = regexExecutor;
+        this.fullTextExecutor = fullTextExecutor;
     }
 
     /**
@@ -91,24 +105,15 @@ public class SearchService {
         List<Book> books = bookService.findAll();
 
         // Then, filter them by keeping those with term(s) matching the given regex
-        List<Book> matchingBooks = new ArrayList<>();
-        for (int i = 0; i < books.size(); i++) {
-            Book b = books.get(i);
-            Stream<Posting> bookPostings = postingService.findByBookId(b.getId()).stream();
-            if (bookPostings.anyMatch(
-                    p -> regex.matcher(p.getTerm()).matches()
-            )) {
-                matchingBooks.add(b);
-            }
-
-            int done = i + 1;
-            if (done % Settings.PROGRESS_BAR_STEP == 0) {
-                LOG.atInfo()
-                        .addArgument(() -> done)
-                        .addArgument(books::size)
-                        .log("Regex search: {}/{} books scanned.");
-            }
+        // (delegated to the regexExecutor)
+        List<Future<Boolean>> matchedBooks = new ArrayList<>(); // same order as for books
+        for (Book b: books) {
+            matchedBooks.add(regexExecutor.submit(() ->
+                    postingService.getBookTerms(b.getId()).stream()
+                            .anyMatch(term -> regex.matcher(term).matches())
+            ));
         }
+        List<Book> matchingBooks = collectMatchingBooks(books, matchedBooks, "Regex");
 
         // Sort the books according to the ranking method
         RankingMethod.sortByCentrality(matchingBooks, rankingMethod);
@@ -133,23 +138,16 @@ public class SearchService {
         List<Book> books = bookService.findAll();
 
         // Then, filter them by keeping those with word(s) matching the given regex
-        List<Book> matchingBooks = new ArrayList<>();
-        for (int i = 0; i < books.size(); i++) {
-            Book b = books.get(i);
-            BookText bookText = bookTextService.findById(b.getId()).get();
-            Stream<String> bookLines = bookText.getContent().lines();
-            if (bookLines.anyMatch(l -> regex.matcher(l).find())) {
-                matchingBooks.add(b);
-            }
-
-            int done = i + 1;
-            if (done % Settings.PROGRESS_BAR_STEP == 0) {
-                LOG.atInfo()
-                        .addArgument(() -> done)
-                        .addArgument(books::size)
-                        .log("Regex FULL search: {}/{} books scanned.");
-            }
+        // (delegated to the fullTextExecutor)
+        List<Future<Boolean>> matchedBooks = new ArrayList<>(); // same order as for books
+        for (Book b: books) {
+            matchedBooks.add(fullTextExecutor.submit(() -> {
+                BookText bookText = bookTextService.findById(b.getId()).get();
+                Stream<String> bookLines = bookText.getContent().lines();
+                return bookLines.anyMatch(l -> regex.matcher(l).find());
+            }));
         }
+        List<Book> matchingBooks = collectMatchingBooks(books, matchedBooks, "Regex FULL");
 
         // Sort the books according to the ranking method
         RankingMethod.sortByCentrality(matchingBooks, rankingMethod);
@@ -161,5 +159,49 @@ public class SearchService {
                 .addArgument(regex::toString)
                 .log("Found {} books after '{}' regex FULL search.");
         return results;
+    }
+
+    /**
+     * Wait for the sub-threads matching results, and keep the matching books.
+     *
+     * <p>If a task fails or the waiting thread is interrupted, the remaining tasks are canceled.</p>
+     *
+     * @param books                     The books, in the same order as their matching results.
+     * @param matchedBooks              The matching result of each book, given by a sub-thread task.
+     * @param searchName                The search name, used in the log and exception messages.
+     * @return                          The matching books, in the same order as given.
+     * @throws IllegalStateException    If the waiting thread is interrupted, or if a task fails with a checked exception.
+     * @throws RuntimeException         The unchecked exception a task failed with.
+     */
+    protected static List<Book> collectMatchingBooks(List<Book> books, List<Future<Boolean>> matchedBooks,
+                                                     String searchName) {
+        List<Book> matchingBooks = new ArrayList<>();
+        try {
+            for (int i = 0; i < books.size(); i++) {
+                boolean matchedBook = matchedBooks.get(i).get();
+                if (matchedBook) matchingBooks.add(books.get(i));
+
+                int done = i + 1;
+                if (done % Settings.PROGRESS_BAR_STEP == 0) {
+                    LOG.atInfo()
+                            .addArgument(searchName)
+                            .addArgument(() -> done)
+                            .addArgument(books::size)
+                            .log("{} search: {}/{} books scanned.");
+                }
+            }
+        } catch (InterruptedException e) {
+            matchedBooks.forEach(f -> f.cancel(true));
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException(searchName + " search interrupted.", e);
+        } catch (ExecutionException e) {
+            matchedBooks.forEach(f -> f.cancel(true));
+            if (e.getCause() instanceof RuntimeException re) {
+                throw re;
+            } else {
+                throw new IllegalStateException(searchName + " search failed.", e.getCause());
+            }
+        }
+        return matchingBooks;
     }
 }

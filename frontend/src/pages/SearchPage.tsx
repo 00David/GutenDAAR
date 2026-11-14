@@ -94,7 +94,7 @@ export default function SearchPage() {
                 <SectionHeading id="results-title" title="Results" />
                 {data.results.length === 0 ? (
                   <p className={styles.empty}>
-                    No book contains <span className={styles.query}>{query}</span>.
+                    No book {mode === findMode('keyword') ? "contains" : "matches"} <span className={styles.query}>{query}</span>.
                   </p>
                 ) : (
                   <ol className={styles.list}>
