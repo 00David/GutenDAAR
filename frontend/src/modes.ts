@@ -27,7 +27,7 @@ export const MODES: SearchMode[] = [
     key: 'fulltext',
     label: 'RegEx (Full text)',
     endpoint: '/api/search/regex/fulltext',
-    warning: 'Searches the full text of every book: it may take some time...',
+    warning: 'Searches among the full text of every book: it may take some time...',
     placeholder: 'A pattern on the text, e.g. white.whale',
   },
 ]

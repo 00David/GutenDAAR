@@ -15,13 +15,6 @@ import java.util.Set;
 public interface PostingRepository extends JpaRepository<Posting, Posting.PostingId> {
 
     /**
-     * Find the posting of a book.
-     * @param bookId      The book (id) to look up.
-     * @return            The postings of the book, in no particular order.
-     */
-    List<Posting> findByBookId(Integer bookId);
-
-    /**
      * Find the postings of a term, i.e. the books containing it with their occurrences.
      * Uses the inverted index {@code idx_postings_term}.
      * @param term      The term to look up.
@@ -39,6 +32,25 @@ public interface PostingRepository extends JpaRepository<Posting, Posting.Postin
      */
     @Query("SELECT p.term FROM Posting p WHERE p.bookId = :bookId")
     Set<String> findTermsByBookId(@Param("bookId") int bookId);
+
+    /**
+     * Find the vocabulary: the distinct terms of all the books.
+     * @return          The distinct terms, in no particular order.
+     */
+    @Query("SELECT DISTINCT p.term FROM Posting p")
+    List<String> findDistinctTerms();
+
+    /**
+     * Find the books containing at least one of the given terms, using the inverted index {@code idx_postings_term}.
+     *
+     * <p>The terms are passed as a single SQL array parameter, so their number is not limited
+     * by the maximum number of bind parameters of a query.</p>
+     *
+     * @param terms     The terms to look up.
+     * @return          The ids of the books containing at least one of the terms, in no particular order.
+     */
+    @Query(value = "SELECT DISTINCT book_id FROM postings WHERE term = ANY(CAST(:terms AS text[]))", nativeQuery = true)
+    List<Integer> findBookIdsByTermIn(@Param("terms") String[] terms);
 
     /** Create the inverted index (term → book), if it does not exist yet. Requires a transaction. */
     @Modifying

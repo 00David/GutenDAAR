@@ -96,5 +96,9 @@ public final class Settings {
     /** {@link #FULL_TEXT_EXECUTOR} queue capacity, or {@code null} if not limited. */
     public static final Integer FULL_TEXT_QUEUE_CAPACITY = null;
 
+    /** Number of tasks per executor thread. */
+    public static final int TASKS_PER_THREAD = 4;
 
+    /** Regex full text search timeout (in seconds). */
+    public static final long FULL_TEXT_SEARCH_TIMEOUT_SECONDS = 90;
 }

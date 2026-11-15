@@ -12,14 +12,14 @@ import fr.sorbonne_u.gutenDAAR.database.services.PostingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -41,18 +41,23 @@ public class SearchService {
     /** The injected posting service. */
     protected final PostingService postingService;
 
+    /** The injected vocabulary. */
+    protected final Vocabulary vocabulary;
+
     /** The injected regex (on indexed terms) executor. */
     protected final ThreadPoolTaskExecutor regexExecutor;
 
     /** The injected regex full text executor. */
     protected final ThreadPoolTaskExecutor fullTextExecutor;
 
-    public SearchService(PostingService postingService, BookTextService bookTextService, BookService bookService,
+    public SearchService(PostingService postingService, BookTextService bookTextService,
+                         BookService bookService, Vocabulary vocabulary,
                          @Qualifier(Settings.REGEX_EXECUTOR) ThreadPoolTaskExecutor regexExecutor,
                          @Qualifier(Settings.FULL_TEXT_EXECUTOR) ThreadPoolTaskExecutor fullTextExecutor) {
         this.postingService = postingService;
         this.bookTextService = bookTextService;
         this.bookService = bookService;
+        this.vocabulary = vocabulary;
         this.regexExecutor = regexExecutor;
         this.fullTextExecutor = fullTextExecutor;
     }
@@ -95,28 +100,61 @@ public class SearchService {
     }
 
     /**
-     * Search the books containing an indexed term matching the pattern, and rank them according to the given ranking method.
-     * @param regex             The regex pattern.
-     * @param rankingMethod     The ranking method to apply.
-     * @return                  Books (using their indexed terms) matching the regex, ranked by the ranking method.
+     * Search the books containing an indexed term matching the pattern,
+     * and rank them according to the given ranking method.
+     *
+     * @param regex                     The regex pattern.
+     * @param rankingMethod             The ranking method to apply.
+     * @return                          Books (using their indexed terms) matching the regex, ranked by the ranking method.
+     * @throws IllegalStateException    If the vocabulary is not loaded yet.
      */
     public List<BookSearchedDTO> searchByRegex(Pattern regex, RankingMethod rankingMethod) {
-        // First get all books
-        List<Book> books = bookService.findAll();
+        // A semaphore is used for submitting a limited amount of simultaneous tasks for
+        // this request: this ensures not overloading the executor with only this request's tasks
+        Semaphore limitSimultaneousTasks = new Semaphore(Settings.REGEX_THREADS);
 
-        // Then, filter them by keeping those with term(s) matching the given regex
-        // (delegated to the regexExecutor)
-        List<Future<Boolean>> matchedBooks = new ArrayList<>(); // same order as for books
-        for (Book b: books) {
-            matchedBooks.add(regexExecutor.submit(() ->
-                    postingService.getBookTerms(b.getId()).stream()
-                            .anyMatch(term -> regex.matcher(term).matches())
-            ));
+        // First get the distinct terms matching the regex, by applying it on the vocabulary
+        // (delegated to the regexExecutor: each task scans a slice of the vocabulary)
+        List<String> terms = vocabulary.getDistinctTerms();
+        int termsPerTask = searchByRegexTermsPerTask(terms.size());
+
+        List<CompletableFuture<List<String>>> matchingTermSlices = new ArrayList<>(); // same order as for terms
+        for (int i = 0; i < terms.size(); i += termsPerTask) {
+            try {
+                limitSimultaneousTasks.acquire();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new IllegalStateException("Regex search interrupted.", e);
+            }
+
+            int iFirstTerm = i; // included
+            int iLastTerm = Math.min(i + termsPerTask, terms.size()); // excluded
+            matchingTermSlices.add(regexExecutor.submitCompletable(() -> {
+                try {
+                    List<String> slice = terms.subList(iFirstTerm, iLastTerm);
+                    return slice.stream()
+                            .filter(term -> regex.matcher(term).matches())
+                            .toList();
+                } finally {
+                    limitSimultaneousTasks.release();
+                }
+            }));
         }
-        List<Book> matchingBooks = collectMatchingBooks(books, matchedBooks, "Regex");
+
+        List<String> matchingTerms = matchingTermSlices.stream()
+                .map(CompletableFuture::join)
+                .flatMap(List::stream)
+                .toList();
+        LOG.atDebug()
+                .addArgument(matchingTerms::size)
+                .addArgument(terms::size)
+                .log("Regex search: {}/{} distinct terms matching.");
+
+        // Then get the books containing at least one matching term (inverted index lookup)
+        Map<Integer, Book> books = bookService.findAllById(postingService.findBookIdsContainingAny(matchingTerms));
 
         // Sort the books according to the ranking method
-        RankingMethod.sortByCentrality(matchingBooks, rankingMethod);
+        List<Book> matchingBooks = RankingMethod.sortByCentrality(books.values(), rankingMethod);
 
         // Finally, return the books as DTOs (with their occurrences not provided)
         List<BookSearchedDTO> results = BookSearchedDTO.from(matchingBooks);
@@ -128,29 +166,98 @@ public class SearchService {
     }
 
     /**
+     * Compute the number of vocabulary terms scanned per task, for the regex search.
+     * @param terms     Total number of terms in the vocabulary.
+     * @return          The number of terms scanned per task, at least 1.
+     */
+    protected static int searchByRegexTermsPerTask(int terms) {
+        return Math.max(1, Math.ceilDiv(terms, Settings.REGEX_THREADS * Settings.TASKS_PER_THREAD));
+    }
+
+    /**
      * Search the books containing a word matching the pattern, and rank them according to the given ranking method.
+     *
+     * <p>
+     * A timeout fixed by {@link Settings#FULL_TEXT_SEARCH_TIMEOUT_SECONDS} can interrupt
+     * the search.
+     * </p>
+     *
      * @param regex             The regex pattern.
      * @param rankingMethod     The ranking method to apply.
      * @return                  Books (using their words) matching the regex, ranked by the ranking method.
      */
     public List<BookSearchedDTO> searchByRegexFullText(Pattern regex, RankingMethod rankingMethod) {
+        // A semaphore is used for submitting a limited amount of simultaneous tasks for
+        // this request: this ensures not overloading the executor with only this request's tasks
+        Semaphore limitSimultaneousTasks = new Semaphore(Settings.FULL_TEXT_THREADS);
+
         // First get all books
         List<Book> books = bookService.findAll();
 
         // Then, filter them by keeping those with word(s) matching the given regex
         // (delegated to the fullTextExecutor)
+        AtomicBoolean cancelled = new AtomicBoolean();
+        long deadline = searchByRegexFullTextDeadline();
         List<Future<Boolean>> matchedBooks = new ArrayList<>(); // same order as for books
         for (Book b: books) {
+            try {
+                limitSimultaneousTasks.acquire();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new IllegalStateException("Regex FULL search interrupted.", e);
+            }
+
             matchedBooks.add(fullTextExecutor.submit(() -> {
-                BookText bookText = bookTextService.findById(b.getId()).get();
-                Stream<String> bookLines = bookText.getContent().lines();
-                return bookLines.anyMatch(l -> regex.matcher(l).find());
+                try {
+                    if (cancelled.get()) return false;
+                    BookText bookText = bookTextService.findById(b.getId()).get();
+                    Stream<String> bookLines = bookText.getContent().lines();
+                    return bookLines
+                            .takeWhile(l -> !cancelled.get()) // stops between two lines once canceled
+                            .anyMatch(l -> regex.matcher(l).find());
+                } finally {
+                    limitSimultaneousTasks.release();
+                }
             }));
         }
-        List<Book> matchingBooks = collectMatchingBooks(books, matchedBooks, "Regex FULL");
+
+        List<Book> matchingBooks = new ArrayList<>();
+        try {
+            for (int i = 0; i < books.size(); i++) {
+                long timeout = deadline - System.nanoTime();
+                boolean matchedBook = matchedBooks.get(i).get(timeout, TimeUnit.NANOSECONDS);
+                if (matchedBook) {
+                    matchingBooks.add(books.get(i));
+                }
+
+                int done = i + 1;
+                if (done % Settings.PROGRESS_BAR_STEP == 0) {
+                    LOG.atInfo()
+                            .addArgument(() -> done)
+                            .addArgument(books::size)
+                            .log("Regex FULL search: {}/{} books scanned.");
+                }
+            }
+        } catch (TimeoutException e) {
+            cancel(cancelled, matchedBooks);
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Regex full-text search took too long.");
+        } catch (InterruptedException e) {
+            cancel(cancelled, matchedBooks);
+            matchedBooks.forEach(f -> f.cancel(true));
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Regex FULL search interrupted.", e);
+        } catch (ExecutionException e) {
+            cancel(cancelled, matchedBooks);
+            matchedBooks.forEach(f -> f.cancel(true));
+            if (e.getCause() instanceof RuntimeException re) {
+                throw re;
+            } else {
+                throw new IllegalStateException("Regex FULL search failed.", e.getCause());
+            }
+        }
 
         // Sort the books according to the ranking method
-        RankingMethod.sortByCentrality(matchingBooks, rankingMethod);
+        RankingMethod.sortInPlaceByCentrality(matchingBooks, rankingMethod);
 
         // Finally, return the books as DTOs (with their occurrences not provided)
         List<BookSearchedDTO> results = BookSearchedDTO.from(matchingBooks);
@@ -162,46 +269,27 @@ public class SearchService {
     }
 
     /**
-     * Wait for the sub-threads matching results, and keep the matching books.
-     *
-     * <p>If a task fails or the waiting thread is interrupted, the remaining tasks are canceled.</p>
-     *
-     * @param books                     The books, in the same order as their matching results.
-     * @param matchedBooks              The matching result of each book, given by a sub-thread task.
-     * @param searchName                The search name, used in the log and exception messages.
-     * @return                          The matching books, in the same order as given.
-     * @throws IllegalStateException    If the waiting thread is interrupted, or if a task fails with a checked exception.
-     * @throws RuntimeException         The unchecked exception a task failed with.
+     * Compute the deadline of a regex full text search started now,
+     * {@link Settings#FULL_TEXT_SEARCH_TIMEOUT_SECONDS} later.
+     * @return          The deadline, as a {@link System#nanoTime()} value.
      */
-    protected static List<Book> collectMatchingBooks(List<Book> books, List<Future<Boolean>> matchedBooks,
-                                                     String searchName) {
-        List<Book> matchingBooks = new ArrayList<>();
-        try {
-            for (int i = 0; i < books.size(); i++) {
-                boolean matchedBook = matchedBooks.get(i).get();
-                if (matchedBook) matchingBooks.add(books.get(i));
+    protected static long searchByRegexFullTextDeadline() {
+        return System.nanoTime() + TimeUnit.SECONDS.toNanos(Settings.FULL_TEXT_SEARCH_TIMEOUT_SECONDS);
+    }
 
-                int done = i + 1;
-                if (done % Settings.PROGRESS_BAR_STEP == 0) {
-                    LOG.atInfo()
-                            .addArgument(searchName)
-                            .addArgument(() -> done)
-                            .addArgument(books::size)
-                            .log("{} search: {}/{} books scanned.");
-                }
-            }
-        } catch (InterruptedException e) {
-            matchedBooks.forEach(f -> f.cancel(true));
-            Thread.currentThread().interrupt();
-            throw new IllegalStateException(searchName + " search interrupted.", e);
-        } catch (ExecutionException e) {
-            matchedBooks.forEach(f -> f.cancel(true));
-            if (e.getCause() instanceof RuntimeException re) {
-                throw re;
-            } else {
-                throw new IllegalStateException(searchName + " search failed.", e.getCause());
-            }
-        }
-        return matchingBooks;
+    /**
+     * Cancel a search: stop its running tasks as soon as possible, and drop its queued ones.
+     * @param cancelled     Indicates if the given tasks are indicated as canceled.
+     * @param tasks         The tasks to cancel.
+     */
+    protected void cancel(AtomicBoolean cancelled, List<? extends Future<?>> tasks) {
+        // checked by the tasks
+        cancelled.set(true);
+
+        // marks queued tasks as canceled, interrupts running ones
+        tasks.forEach(f -> f.cancel(true));
+
+        // removes the cancelled ones from the queue right away
+        fullTextExecutor.getThreadPoolExecutor().purge();
     }
 }

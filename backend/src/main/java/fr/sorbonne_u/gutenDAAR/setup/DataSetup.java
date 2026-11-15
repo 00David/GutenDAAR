@@ -10,6 +10,7 @@ import fr.sorbonne_u.gutenDAAR.database.services.BookService;
 import fr.sorbonne_u.gutenDAAR.database.services.BookTextService;
 import fr.sorbonne_u.gutenDAAR.database.services.JaccardEdgeService;
 import fr.sorbonne_u.gutenDAAR.database.services.PostingService;
+import fr.sorbonne_u.gutenDAAR.search.Vocabulary;
 import fr.sorbonne_u.gutenDAAR.setup.centrality.BookIdInMatrix;
 import fr.sorbonne_u.gutenDAAR.setup.centrality.CentralityI;
 import fr.sorbonne_u.gutenDAAR.setup.centrality.PageRank;
@@ -28,6 +29,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 /**
  * Fill the database at application startup, from the GutenDAAR catalog and the Gutenberg mirror.
@@ -47,11 +50,17 @@ public class DataSetup implements ApplicationRunner {
     /** The injected posting service. */
     protected final PostingService postingService;
 
-    public DataSetup(BookService bookService, BookTextService bookTextService, JaccardEdgeService jeService, PostingService postingService) {
+    /** The injected vocabulary, kept in memory. */
+    protected final Vocabulary vocabulary;
+
+    public DataSetup(BookService bookService, BookTextService bookTextService,
+                     JaccardEdgeService jeService, PostingService postingService,
+                     Vocabulary vocabulary) {
         this.bookService = bookService;
         this.bookTextService = bookTextService;
         this.jeService = jeService;
         this.postingService = postingService;
+        this.vocabulary = vocabulary;
     }
 
     /**
@@ -64,6 +73,7 @@ public class DataSetup implements ApplicationRunner {
     public void run(@NonNull ApplicationArguments args) throws Exception {
         if (bookService.isSetupDone()) {
             LOG.info("Database already set up: skipping the setup.");
+            vocabulary.load();
             return;
         }
         if (!bookService.isEmpty()) {
@@ -71,19 +81,22 @@ public class DataSetup implements ApplicationRunner {
         }
 
         List<GutenDAAREntry> catalog = GutenDAARCatalogCSV.retrieve();
-        LOG.info("1/5 - Catalog ready: {} book references.", catalog.size());
+        LOG.info("1/6 - Catalog ready: {} book references.", catalog.size());
 
         initBooksWithoutCentrality(catalog, Settings.COVER_TYPE);
-        LOG.info("2/5 - books table partially ready (without centrality computed).");
+        LOG.info("2/6 - books table partially ready (without centrality computed).");
 
         initBookTextsAndPostings(catalog);
-        LOG.info("3/5 - book texts and postings tables ready.");
+        LOG.info("3/6 - book texts and postings tables ready.");
 
         initJaccardEdges(catalog);
-        LOG.info("4/5 - jaccard_edges table ready.");
+        LOG.info("4/6 - jaccard_edges table ready.");
 
         updateBooksCentrality(catalog);
-        LOG.info("5/5 - books table fully ready (with centrality computed).");
+        LOG.info("5/6 - books table fully ready (with centrality computed).");
+
+        vocabulary.load();
+        LOG.info("6/6 - vocabulary (distinct indexed terms) loaded in memory.");
 
         LOG.info("SETUP COMPLETED");
     }
@@ -136,12 +149,12 @@ public class DataSetup implements ApplicationRunner {
 
             try {
                 // Retrieve the book text
-                Library.RetrievedText text  = Library.retrieveText(book.id());
+                Library.RetrievedText text  = Library.retrieveText(book.id(), book.language());
 
                 // Insert into the book texts table the raw text
                 bookTextService.insert(new BookText(book.id(), text.rawText()));
 
-                // Build the map associating to each book term -> its n° of occurrences
+                // Build the map associating each book indexed term -> its n° of occurrences
                 Map<String, Integer> occurrences = new HashMap<>();
                 for (String term: text.terms()) {
                     occurrences.merge(term, 1, Integer::sum);
@@ -177,34 +190,66 @@ public class DataSetup implements ApplicationRunner {
      * @param catalog       The entries of the books to link, with their postings already inserted.
      */
     protected void initJaccardEdges(List<GutenDAAREntry> catalog) {
-        List<JaccardEdge> edges = new ArrayList<>();
-
         // Load the words only once per book
         List<Set<String>> terms = catalog.stream()
                 .map(e -> postingService.getBookTerms(e.id()))
                 .toList();
 
-        // For each book pair, in a single direction, compute the jaccard distance between them
-        for (int aI = 0; aI < catalog.size(); aI++) {
-            for (int bI = aI + 1; bI < catalog.size(); bI++) {
-                GutenDAAREntry bookA = catalog.get(aI);
-                GutenDAAREntry bookB = catalog.get(bI);
+        // For each book pair, in a single direction, compute the jaccard distance between them.
+        // The rows (book A) are computed in parallel, on the common fork-join pool:
+        // the terms are only read, and each row returns its own edges.
+        AtomicInteger rowsDone = new AtomicInteger();
+        List<JaccardEdge> edges = IntStream.range(0, catalog.size())
+                .parallel()
+                .mapToObj(aI -> {
+                    List<JaccardEdge> rowEdges = new ArrayList<>();
+                    for (int bI = aI + 1; bI < catalog.size(); bI++) {
+                        GutenDAAREntry bookA = catalog.get(aI);
+                        GutenDAAREntry bookB = catalog.get(bI);
 
-                Set<String> bookATerms = terms.get(aI);
-                Set<String> bookBTerms = terms.get(bI);
+                        Set<String> bookATerms = terms.get(aI);
+                        Set<String> bookBTerms = terms.get(bI);
 
-                Set<String> inter = new HashSet<>(bookATerms);
-                inter.retainAll(bookBTerms);
+                        Set<String> biggerSet;
+                        Set<String> smallerSet;
+                        if (bookATerms.size() < bookBTerms.size()) {
+                            biggerSet = bookBTerms;
+                            smallerSet = bookATerms;
+                        } else {
+                            biggerSet = bookATerms;
+                            smallerSet = bookBTerms;
+                        }
+                        int interSize = 0;
+                        for (String term: smallerSet) {
+                            if (biggerSet.contains(term)) {
+                                interSize++;
+                            }
+                        }
 
-                int unionSize = bookATerms.size() + bookBTerms.size() - inter.size();
-                if (unionSize == 0) {
-                    continue; // two books without any term
-                }
+                        int unionSize = bookATerms.size() + bookBTerms.size() - interSize;
+                        if (unionSize == 0) {
+                            continue; // two books without any term
+                        }
 
-                double jaccardDistance = 1.0 - ((double) inter.size() / unionSize);
-                edges.add(new JaccardEdge(bookA.id(), bookB.id(), jaccardDistance));
-            }
-        }
+                        double jaccardDistance = 1.0 - ((double) interSize / unionSize);
+                        rowEdges.add(new JaccardEdge(bookA.id(), bookB.id(), jaccardDistance));
+                    }
+
+                    // Rows end in any order: count the completed ones
+                    int done = rowsDone.incrementAndGet();
+                    if (done % Settings.PROGRESS_BAR_STEP == 0) {
+                        LOG.atInfo()
+                                .addArgument(() -> Utils.progressBar(done, catalog.size()))
+                                .log("Building Jaccard graph {}");
+                    }
+                    return rowEdges;
+                })
+                .flatMap(List::stream)
+                .toList(); // in the rows order
+
+        LOG.atInfo()
+            .addArgument(() -> Utils.progressBar(rowsDone.get(), catalog.size()))
+            .log("Building Jaccard graph {}");
 
         // Insert all edges
         // (the method will in fact insert each edge in both directions, so 2 insertions per edge  in the list)

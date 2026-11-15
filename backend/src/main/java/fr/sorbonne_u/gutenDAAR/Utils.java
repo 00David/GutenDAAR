@@ -1,5 +1,9 @@
 package fr.sorbonne_u.gutenDAAR;
 
+import fr.sorbonne_u.gutenDAAR.setup.Stemmers;
+import org.jspecify.annotations.Nullable;
+import org.tartarus.snowball.SnowballStemmer;
+
 import java.net.URI;
 import java.util.Locale;
 
@@ -33,13 +37,29 @@ public final class Utils {
     }
 
     /**
-     * Normalize a word like an indexed term.
+     * Normalize a word like an indexed term (without stemming it).
      *
-     * @param word      The word to normalize.
-     * @return          The normalized word.
+     * @param word          The word to normalize.
+     * @return              The normalized word.
      */
     public static String normalize(String word) {
-        return word.strip().toLowerCase(Locale.ROOT);
+        return normalize(word, null);
+    }
+
+    /**
+     * Normalize a word like an indexed term.
+     *
+     * @param word          The word to normalize.
+     * @param stemmer       The word's language stemmer to use, or {@code null} if not provided.
+     * @return              The normalized word.
+     */
+    public static String normalize(String word, @Nullable SnowballStemmer stemmer) {
+        String w = word.strip().toLowerCase(Locale.ROOT);
+        if (stemmer != null) {
+            return Stemmers.stem(stemmer, w);
+        } else {
+            return w;
+        }
     }
 
     /**
@@ -50,6 +70,8 @@ public final class Utils {
      * @return            The separated words.
      */
     public static String[] separateWords(String string) {
-        return Settings.WORD_SEPARATORS.split(string);
+        return Settings.WORD_SEPARATORS.splitAsStream(string)
+                .filter(word -> !word.isEmpty())
+                .toArray(String[]::new);
     }
 }

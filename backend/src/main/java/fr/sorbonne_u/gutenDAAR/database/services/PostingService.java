@@ -4,6 +4,7 @@ import fr.sorbonne_u.gutenDAAR.Settings;
 import fr.sorbonne_u.gutenDAAR.database.entities.Book;
 import fr.sorbonne_u.gutenDAAR.database.entities.Posting;
 import fr.sorbonne_u.gutenDAAR.database.repositories.BookRepository;
+import fr.sorbonne_u.gutenDAAR.database.repositories.BookTerm;
 import fr.sorbonne_u.gutenDAAR.database.repositories.PostingRepository;
 import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
@@ -12,8 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.regex.Pattern;
 
 /**
@@ -91,15 +96,6 @@ public class PostingService {
     }
 
     /**
-     * Find the postings of a book: the indexed terms contained in it (forward index lookup).
-     * @param bookId    The book to look up.
-     * @return          The postings of the book, in no particular order.
-     */
-    public List<Posting> findByBookId(Integer bookId) {
-        return postingRepository.findByBookId(bookId);
-    }
-
-    /**
      * Find the postings of a term: the books containing it, with their occurrences (inverted index lookup).
      * @param term      The term to look up, already normalized like the indexed words.
      * @return          The postings of the term, in no particular order.
@@ -117,5 +113,35 @@ public class PostingService {
         Set<String> terms = postingRepository.findTermsByBookId(bookId);
         LOG.debug("Got words from book {}.", bookId);
         return terms;
+    }
+
+    /**
+     * Find the vocabulary: the distinct terms of all the books.
+     *
+     * <p>
+     * The terms are sorted in Java ({@link String#compareTo} order) rather than by the database.
+     * </p>
+     *
+     * @return          The distinct terms, sorted (unmodifiable list).
+     */
+    public List<String> findDistinctTerms() {
+        String[] terms = postingRepository.findDistinctTerms().toArray(String[]::new);
+        Arrays.parallelSort(terms);
+        LOG.debug("Got {} distinct terms.", terms.length);
+        return List.of(terms);
+    }
+
+    /**
+     * Find the books containing at least one of the given terms (inverted index lookup).
+     * @param terms     The terms to look up, already normalized like the indexed words.
+     * @return          The ids of the books containing at least one of the terms, in no particular order.
+     */
+    public List<Integer> findBookIdsContainingAny(Collection<String> terms) {
+        if (terms.isEmpty()) {
+            return List.of();
+        }
+        List<Integer> bookIds = postingRepository.findBookIdsByTermIn(terms.toArray(String[]::new));
+        LOG.debug("Got {} books containing at least one of {} terms.", bookIds.size(), terms.size());
+        return bookIds;
     }
 }
