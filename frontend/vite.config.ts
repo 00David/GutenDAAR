@@ -11,7 +11,6 @@ export default defineConfig({
     proxy: { '/api': process.env.API_PROXY_TARGET ?? 'http://localhost:8080' },
   },
   build: {
-    outDir: '../backend/src/main/resources/static',
     emptyOutDir: true,
   },
 })

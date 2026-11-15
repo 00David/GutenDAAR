@@ -1,0 +1,60 @@
+# GutenDAAR deployment: 'docker compose up -d --build', then open http://localhost
+# Secrets: create secrets/db_name.txt, secrets/db_user.txt and secrets/db_password.txt first (see secrets/README.md)
+
+services:
+
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    secrets: [DB_NAME, DB_USER, DB_PASSWORD]
+    environment:
+      # Only read when the pgdata volume is created: later changes of the secrets are ignored by PostgreSQL
+      POSTGRES_DB_FILE: /run/secrets/DB_NAME
+      POSTGRES_USER_FILE: /run/secrets/DB_USER
+      POSTGRES_PASSWORD_FILE: /run/secrets/DB_PASSWORD
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # $$: escaped for Compose, so that the shell of the container reads the secrets
+      test: ["CMD-SHELL", "pg_isready -U \"$$(cat /run/secrets/DB_USER)\" -d \"$$(cat /run/secrets/DB_NAME)\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    # Spring reads DB_NAME, DB_USER and DB_PASSWORD from /run/secrets/ (configtree)
+    secrets: [DB_NAME, DB_USER, DB_PASSWORD]
+    environment:
+      DB_HOST: db
+      # Run command 'SPRING_PROFILES_ACTIVE=reset docker compose up -d backend' to reset the database
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-}
+    volumes:
+      - covers:/app/data/covers
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    # Only published port: the backend and the database are only reachable through the Docker network
+    ports:
+      - "80:8080"
+    depends_on:
+      - backend
+
+secrets:
+  DB_NAME:
+    file: ./secrets/db_name.txt
+  DB_USER:
+    file: ./secrets/db_user.txt
+  DB_PASSWORD:
+    file: ./secrets/db_password.txt
+
+volumes:
+  # Database files
+  pgdata:
+  # Book covers retrieved during the setup
+  covers:

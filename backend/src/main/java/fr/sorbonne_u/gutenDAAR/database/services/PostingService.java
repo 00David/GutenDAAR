@@ -1,10 +1,8 @@
 package fr.sorbonne_u.gutenDAAR.database.services;
 
 import fr.sorbonne_u.gutenDAAR.Settings;
-import fr.sorbonne_u.gutenDAAR.database.entities.Book;
 import fr.sorbonne_u.gutenDAAR.database.entities.Posting;
 import fr.sorbonne_u.gutenDAAR.database.repositories.BookRepository;
-import fr.sorbonne_u.gutenDAAR.database.repositories.BookTerm;
 import fr.sorbonne_u.gutenDAAR.database.repositories.PostingRepository;
 import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
@@ -12,14 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.regex.Pattern;
 
 /**
  * Service allowing to interact with {@link PostingRepository}.

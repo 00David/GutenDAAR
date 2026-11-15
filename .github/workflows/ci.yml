@@ -8,13 +8,18 @@ jobs:
       postgres:
         image: postgres:17
         env:
+          POSTGRES_DB: gutendaar
           POSTGRES_USER: daar
           POSTGRES_PASSWORD: daar
-          POSTGRES_DB: gutendaar
         ports: ["5432:5432"]
         options: >-
           --health-cmd pg_isready --health-interval 5s
           --health-timeout 5s --health-retries 10
+    # Throwaway credentials of the CI database container above
+    env:
+      DB_NAME: gutendaar
+      DB_USER: daar
+      DB_PASSWORD: daar
     defaults:
       run:
         working-directory: backend

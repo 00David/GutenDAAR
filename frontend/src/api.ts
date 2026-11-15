@@ -1,17 +1,11 @@
 /**
  * Client of the GutenDAAR REST API.
- *
- * The API base URL is never hardcoded: by default it is empty, so requests go to the same origin
- * (the backend serving the built frontend, or the Vite dev proxy). For a frontend running on another
- * machine of the LAN, set VITE_API_URL (e.g. VITE_API_URL=http://192.168.1.20:8080).
  */
 import type { Ranking } from './modes'
 
-const API_URL: string =import.meta.env.VITE_API_URL ?? ''
-
 /** Absolute URL of an API path. */
 export function apiUrl(path: string): string {
-  return API_URL + path
+  return path
 }
 
 /** Gutenberg URL, used for inserting links targeting book descriptions. */
