@@ -93,6 +93,14 @@ public class BookService {
     }
 
     /**
+     * Find all books.
+     * @return      The found books.
+     */
+    public List<Book> findAll() {
+        return bookRepository.findAll();
+    }
+
+    /**
      * Find a book by its Gutenberg id.
      * @param id    The unique Gutenberg book id.
      * @return      The book, or an empty optional if it is not in the database.

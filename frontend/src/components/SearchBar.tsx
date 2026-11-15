@@ -1,11 +1,11 @@
-import { useId, useState, type FormEvent } from 'react'
+import { useId, useState, type SubmitEvent } from 'react'
 import styles from '../css/SearchBar.module.css'
 import { MODES, RANKINGS, findMode, findRanking } from '../modes'
 
 interface SearchBarProps {
   initialQuery?: string
   initialMode?: string
-  initialRank?: string
+  initialRanking?: string
   /** Large centred version for the home page. */
   large?: boolean
   onSearch: (query: string, mode: string, rank: string) => void
@@ -15,17 +15,28 @@ interface SearchBarProps {
 export default function SearchBar({
   initialQuery = '',
   initialMode,
-  initialRank,
+  initialRanking,
   large = false,
   onSearch,
 }: SearchBarProps) {
   const [query, setQuery] = useState(initialQuery)
   const [modeKey, setModeKey] = useState(findMode(initialMode ?? null).key)
-  const [rankKey, setRankKey] = useState(findRanking(initialRank ?? null).key)
+  const [rankKey, setRankKey] = useState(findRanking(initialRanking ?? null).key)
   const mode = findMode(modeKey)
   const rankLabelId = useId()
 
-  function submit(e: FormEvent) {
+  /**
+   * Indicates if the user can search, he cannot when:
+   * - ranking by occurrences is selected
+   * - and another search mode than by keyword is selected
+   * @param givenRankKey   The rank hey to consider.
+   */
+  function canSearch(givenRankKey: string): boolean {
+    return ! (givenRankKey === findRanking('occurrences').key
+        && mode !== findMode('keyword'))
+  }
+
+  function submit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
     const q = query.trim()
     if (q) onSearch(q, mode.key, rankKey)
@@ -67,7 +78,7 @@ export default function SearchBar({
             className={styles.input}
           />
         </div>
-        <button type="submit" disabled={!query.trim()} className={styles.button}>
+        <button type="submit" disabled={!query.trim() || !canSearch(rankKey)} className={styles.button}>
           Search
         </button>
       </div>
@@ -84,6 +95,7 @@ export default function SearchBar({
               value={r.key}
               checked={rankKey === r.key}
               onChange={() => chooseRank(r.key)}
+              disabled={!canSearch(r.key)}
             />
             {r.label}
           </label>

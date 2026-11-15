@@ -2,8 +2,10 @@ package fr.sorbonne_u.gutenDAAR.setup.retrieval;
 
 import fr.sorbonne_u.gutenDAAR.Settings;
 import fr.sorbonne_u.gutenDAAR.Utils;
+import fr.sorbonne_u.gutenDAAR.setup.Stemmers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tartarus.snowball.SnowballStemmer;
 
 import java.io.IOException;
 import java.net.URI;
@@ -19,7 +21,7 @@ import java.util.regex.Pattern;
  * Utility class for retrieving the books from the mirror.
  *
  * <p>
- * Its {@link #retrieveText(int)} method is in particular exposed.
+ * Its {@link #retrieveText(int, String)} method is in particular exposed.
  * </p>
  */
 public class Library {
@@ -29,8 +31,6 @@ public class Library {
     /** Logger. */
     protected static final Logger LOG = LoggerFactory.getLogger(Library.class);
 
-    /** Separators between words: anything that is not a letter (accents included) or a digit. */
-    protected static final Pattern WORD_SEPARATORS = Pattern.compile("[^\\p{L}\\p{M}\\p{N}]+");
     /** The treated book text content starts after the line accepting this pattern. */
     protected static final Pattern START_TEXT = Pattern.compile("^\\*\\*\\* START");
     /** The treated book text content stops before the line accepting this pattern. */
@@ -49,13 +49,14 @@ public class Library {
      * Retrieve the book text from the mirror, with its words and terms.
      *
      * @param bookId                    The unique Gutenberg book id.
+     * @param language                  Book text language ISO code, for instance {@code en}.
      * @return                          The raw book text, its words and its terms.
      * @throws IOException              If an I/O error occurs while retrieving the book from the mirror.
      * @throws InterruptedException     If an interruption occurs while retrieving the book from the mirror.
      */
-    public static RetrievedText retrieveText(int bookId) throws IOException, InterruptedException {
+    public static RetrievedText retrieveText(int bookId, String language) throws IOException, InterruptedException {
         String rawText = retrieve(bookId);
-        return treatRetrievedText(rawText);
+        return treatRetrievedText(rawText, language);
     }
 
     /**
@@ -87,9 +88,12 @@ public class Library {
      * <p>Only the text content is considered, between the Gutenberg start and end markers.</p>
      *
      * @param rawText       The raw book text.
+     * @param language      Book text language ISO code, for instance {@code en}.
      * @return              The raw book text, its words and its terms.
      */
-    protected static RetrievedText treatRetrievedText(String rawText) {
+    protected static RetrievedText treatRetrievedText(String rawText, String language) {
+        SnowballStemmer stemmer = Stemmers.forLanguage(language);
+
         List<String> lines = rawText.strip().lines().toList();
         List<String> words = new ArrayList<>();
         List<String> terms = new ArrayList<>();
@@ -102,15 +106,15 @@ public class Library {
                     break; // stop at the end marker line (not taking it into account)
                 }
 
-                for (String word : WORD_SEPARATORS.split(line)) {
+                for (String word : Utils.separateWords(line)) {
                     if (word.isEmpty()) {
                         continue;
                     }
                     words.add(word);
 
-                    String term = Utils.normalize(word);
+                    String term = Utils.normalize(word, stemmer);
                     if (!term.isEmpty()) {
-                        terms.add(term); // TODO: more selective strategy ?
+                        terms.add(term);
                     }
                 }
                 // If the "real" text content has not started yet,

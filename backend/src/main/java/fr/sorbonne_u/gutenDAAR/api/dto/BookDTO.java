@@ -3,6 +3,8 @@ package fr.sorbonne_u.gutenDAAR.api.dto;
 import fr.sorbonne_u.gutenDAAR.database.entities.Book;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+
 /**
  * Book as sent to the frontend.
  *
@@ -39,5 +41,14 @@ public record BookDTO(int id, String title, @Nullable String author, String lang
                 book.getBetweennessCentrality(),
                 book.getPagerankCentrality()
         );
+    }
+
+    /**
+     * Build the DTOs of a list of book entities (keeping their order).
+     * @param books     The book entities.
+     * @return          The corresponding DTOs (unmodifiable list).
+     */
+    public static List<BookDTO> from(List<Book> books) {
+        return books.stream().map(BookDTO::from).toList();
     }
 }

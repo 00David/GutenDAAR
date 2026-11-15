@@ -87,7 +87,11 @@ function BookDetails({ book }: { book: Book }) {
           <dd>{languageName(book.language)}</dd>
           <dt>Words</dt>
           <dd>{book.wordCount.toLocaleString('en')}</dd>
-          <dt>Centrality</dt>
+          <dt>Closeness centrality</dt>
+          <dd>{formatCentrality(book.closenessCentrality)}</dd>
+          <dt>Betweenness centrality</dt>
+          <dd>{formatCentrality(book.betweennessCentrality)}</dd>
+          <dt>Pagerank</dt>
           <dd>{formatCentrality(book.pagerankCentrality)}</dd>
           <dt>Gutenberg id</dt>
           <dd>{book.id}</dd>

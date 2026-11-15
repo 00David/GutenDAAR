@@ -2,7 +2,6 @@ package fr.sorbonne_u.gutenDAAR.api.controllers;
 
 import fr.sorbonne_u.gutenDAAR.Settings;
 import fr.sorbonne_u.gutenDAAR.api.dto.BookDTO;
-import fr.sorbonne_u.gutenDAAR.database.entities.Book;
 import fr.sorbonne_u.gutenDAAR.database.services.BookService;
 import fr.sorbonne_u.gutenDAAR.search.RecommendationService;
 import fr.sorbonne_u.gutenDAAR.setup.retrieval.covers.Covers;
@@ -21,9 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -94,15 +91,6 @@ public class BookController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unknown book " + id);
         }
 
-        List<Integer> neighbourIds = recommendationService.recommend(List.of(id), Set.of(id), limit);
-        Map<Integer, Book> books = bookService.findAllById(neighbourIds);
-        List<BookDTO> neighbours = new ArrayList<>(neighbourIds.size());
-        for (int neighbourId : neighbourIds) {
-            Book book = books.get(neighbourId);
-            if (book != null) {
-                neighbours.add(BookDTO.from(book));
-            }
-        }
-        return neighbours;
+        return recommendationService.recommend(Set.of(id), Set.of(id), limit);
     }
 }
