@@ -68,6 +68,11 @@ public final class Settings {
     public static final int BATCH_SIZE = 1000;
     /** Book cover type to retrieve during setup. */
     public static final CoverType COVER_TYPE = CoverType.ORIGINAL;
+    /**
+     * Number of nearest neighbours kept for each book in the jaccard graph, when created.
+     * An edge is kept if one of its two books is among the nearest neighbours of the other.
+     */
+    public static final int JACCARD_NEIGHBOURS = 10;
 
     /* API PART */
 
