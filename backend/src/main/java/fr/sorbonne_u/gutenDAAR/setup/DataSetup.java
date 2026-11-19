@@ -185,7 +185,8 @@ public class DataSetup implements ApplicationRunner {
     }
 
     /**
-     * Insert the jaccard edges, computed for each book pair from the postings.
+     * Insert the jaccard edges, computed for each book pair from the postings,
+     * keeping only the edges to the {@link Settings#JACCARD_NEIGHBOURS} nearest neighbours of each book.
      * Two books without any term are not linked.
      * @param catalog       The entries of the books to link, with their postings already inserted.
      */
@@ -251,9 +252,39 @@ public class DataSetup implements ApplicationRunner {
             .addArgument(() -> Utils.progressBar(rowsDone.get(), catalog.size()))
             .log("Building Jaccard graph {}");
 
-        // Insert all edges
-        // (the method will in fact insert each edge in both directions, so 2 insertions per edge  in the list)
-        jeService.insert(edges);
+        // Only keep the edges to the nearest neighbours of each book
+        List<JaccardEdge> keptEdges = keepNearestNeighbours(edges, Settings.JACCARD_NEIGHBOURS);
+        LOG.info("Kept {} jaccard edges out of {} ({} nearest neighbours per book).",
+                keptEdges.size(), edges.size(), Settings.JACCARD_NEIGHBOURS);
+
+        // Insert the kept edges
+        // (the method will in fact insert each edge in both directions, so 2 insertions per edge in the list)
+        jeService.insert(keptEdges);
+    }
+
+    /**
+     * Keep, for each book, only its edges to its k nearest neighbours (smallest jaccard distances).
+     * An edge is kept if one of its two books is among the k nearest neighbours of the other: no book is then isolated.
+     * @param edges     The edges, in a single direction.
+     * @param k         The number of nearest neighbours to keep for each book.
+     * @return          The kept edges, still in a single direction, without duplicates.
+     */
+    protected static List<JaccardEdge> keepNearestNeighbours(List<JaccardEdge> edges, int k) {
+        // Edges of each book (each edge belongs to its 2 books)
+        Map<Integer, List<JaccardEdge>> bookEdges = new HashMap<>();
+        for (JaccardEdge edge : edges) {
+            bookEdges.computeIfAbsent(edge.getBookA(), id -> new ArrayList<>()).add(edge);
+            bookEdges.computeIfAbsent(edge.getBookB(), id -> new ArrayList<>()).add(edge);
+        }
+
+        // Keep the k nearest edges of each book; an edge kept by its 2 books is only kept once
+        // (identity set: JaccardEdge does not override equals, and the same object is shared by both books)
+        Set<JaccardEdge> kept = Collections.newSetFromMap(new IdentityHashMap<>());
+        for (List<JaccardEdge> edgesOfBook : bookEdges.values()) {
+            edgesOfBook.sort(Comparator.comparingDouble(JaccardEdge::getDistance));
+            kept.addAll(edgesOfBook.subList(0, Math.min(k, edgesOfBook.size())));
+        }
+        return new ArrayList<>(kept);
     }
 
     /**
