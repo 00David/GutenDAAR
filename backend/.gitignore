@@ -36,5 +36,8 @@ build/
 /data/**
 !/data/*.csv
 
+### Benchmark results ###
+/benchmark
+
 ### Local credentials (see .env.example) ###
 .env
