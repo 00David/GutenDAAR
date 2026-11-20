@@ -1,4 +1,5 @@
 # GutenDAAR deployment: 'docker compose up -d --build', then open http://localhost
+# For reseting the database (by only re-building the backend): 'docker compose build backend && SPRING_PROFILES_ACTIVE=reset docker compose up -d'
 # Secrets: create secrets/db_name.txt, secrets/db_user.txt and secrets/db_password.txt first (see secrets/README.md)
 
 services:
@@ -28,7 +29,6 @@ services:
     secrets: [DB_NAME, DB_USER, DB_PASSWORD]
     environment:
       DB_HOST: db
-      # Run command 'SPRING_PROFILES_ACTIVE=reset docker compose up -d backend' to reset the database
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-}
     volumes:
       - covers:/app/data/covers

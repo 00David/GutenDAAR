@@ -69,6 +69,13 @@
             <artifactId>lucene-analysis-common</artifactId>
             <version>10.6.0</version>
         </dependency>
+        <!-- Charts of the search benchmark (src/test/.../benchmark) -->
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.5.5</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
