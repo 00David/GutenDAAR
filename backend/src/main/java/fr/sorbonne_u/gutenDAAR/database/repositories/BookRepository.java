@@ -31,7 +31,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
      * @return      true if a book has a {@code null} centrality.
      */
     default boolean existsByCentralityIsNull() {
-        // TODO: also consider closeness and betweenness when implemented
-        return existsByPagerankCentralityIsNull(); // || existsByClosenessCentralityIsNull() || existsByBetweennessCentralityIsNull()
+        return existsByPagerankCentralityIsNull() || existsByClosenessCentralityIsNull()
+                || existsByBetweennessCentralityIsNull();
     }
 }

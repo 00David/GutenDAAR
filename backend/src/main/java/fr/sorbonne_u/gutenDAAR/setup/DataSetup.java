@@ -11,8 +11,10 @@ import fr.sorbonne_u.gutenDAAR.database.services.BookTextService;
 import fr.sorbonne_u.gutenDAAR.database.services.JaccardEdgeService;
 import fr.sorbonne_u.gutenDAAR.database.services.PostingService;
 import fr.sorbonne_u.gutenDAAR.search.Vocabulary;
+import fr.sorbonne_u.gutenDAAR.setup.centrality.Betweenness;
 import fr.sorbonne_u.gutenDAAR.setup.centrality.BookIdInMatrix;
 import fr.sorbonne_u.gutenDAAR.setup.centrality.CentralityI;
+import fr.sorbonne_u.gutenDAAR.setup.centrality.Closeness;
 import fr.sorbonne_u.gutenDAAR.setup.centrality.PageRank;
 import fr.sorbonne_u.gutenDAAR.setup.retrieval.GutenDAARCatalogCSV;
 import fr.sorbonne_u.gutenDAAR.setup.retrieval.GutenDAARCatalogCSV.GutenDAAREntry;
@@ -296,14 +298,19 @@ public class DataSetup implements ApplicationRunner {
         BookIdInMatrix bookIdInMatrix = jeService.buildAdjacencyMatrix();
         CentralityI pr = new PageRank();
         double[] ranks = pr.compute(bookIdInMatrix.matrix());
+        CentralityI cl = new Closeness();
+        double[] closeness = cl.compute(bookIdInMatrix.matrix());
+        CentralityI bt = new Betweenness();
+        double[] betweenness = bt.compute(bookIdInMatrix.matrix());
 
-        // For each book, get its rank in the computed vector and update its centrality in DB
+        // For each book, get its values in the computed vectors and update its centrality in DB
         for (GutenDAAREntry book: catalog) {
             int id = book.id();
             int indexInMatrix = bookIdInMatrix.bookIdToMatrixIndex().get(id);
             double pagerankCentrality = ranks[indexInMatrix];
-            // TODO: pass computed closeness and betweenness centralities
-            bookService.updateCentrality(id, null, null, pagerankCentrality);
+            double closenessCentrality = closeness[indexInMatrix];
+            double betweennessCentrality = betweenness[indexInMatrix];
+            bookService.updateCentrality(id, closenessCentrality, betweennessCentrality, pagerankCentrality);
         }
     }
 }

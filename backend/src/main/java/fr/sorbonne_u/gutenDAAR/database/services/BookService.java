@@ -67,13 +67,14 @@ public class BookService {
      * @param pagerankCentrality        The pagerank computed book centrality.
      */
     @Transactional
-    public void updateCentrality(int id, Double closenessCentrality, Double betweennessCentrality, double pagerankCentrality) {
+    public void updateCentrality(int id, double closenessCentrality, double betweennessCentrality, double pagerankCentrality) {
         Book b = bookRepository.getReferenceById(id);
-        // TODO: also set centralities for closeness and betweenness + pass these parameters as double
+        b.setClosenessCentrality(closenessCentrality);
+        b.setBetweennessCentrality(betweennessCentrality);
         b.setPagerankCentrality(pagerankCentrality);
         // setters implicitly update the book in DB
-        // TODO: also log for closeness and betweenness centralities
-        LOG.debug("Updated centrality of {} with new value: {}.", id, pagerankCentrality);
+        LOG.debug("Updated centralities of {} with new values: closeness {}, betweenness {}, pagerank {}.",
+                id, closenessCentrality, betweennessCentrality, pagerankCentrality);
     }
 
     /**
