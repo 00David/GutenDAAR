@@ -19,3 +19,5 @@ build/
 
 ### Docker secrets (see secrets/README.md) ###
 secrets/*.txt
+
+.DS_Store
