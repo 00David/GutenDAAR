@@ -1,0 +1,40 @@
+/* a single readable column, on phone and desktop */
+.main {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.back {
+  font-size: var(--text-sm);
+  color: var(--accent-hover);
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+.title {
+  margin-top: 1rem;
+  font-family: var(--font-serif);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--gray-900);
+}
+
+.author {
+  margin-top: 0.5rem;
+  color: var(--gray-600);
+}
+
+/* the stored plain text: its line breaks are kept, and long lines wrap instead of making the page wider */
+.text {
+  margin-top: 1.5rem;
+  font-family: var(--font-serif);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--gray-900);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

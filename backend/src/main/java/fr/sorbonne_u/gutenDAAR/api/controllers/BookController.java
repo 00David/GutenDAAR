@@ -3,6 +3,7 @@ package fr.sorbonne_u.gutenDAAR.api.controllers;
 import fr.sorbonne_u.gutenDAAR.Settings;
 import fr.sorbonne_u.gutenDAAR.api.dto.BookDTO;
 import fr.sorbonne_u.gutenDAAR.database.services.BookService;
+import fr.sorbonne_u.gutenDAAR.database.services.BookTextService;
 import fr.sorbonne_u.gutenDAAR.search.RecommendationService;
 import fr.sorbonne_u.gutenDAAR.setup.retrieval.covers.Covers;
 import org.springframework.core.io.FileSystemResource;
@@ -18,13 +19,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
 /**
- * REST endpoints about a single book: details, cover and neighbours in the document graph.
+ * REST endpoints about a single book: details, cover, text and neighbours in the document graph.
  */
 @RestController
 @RequestMapping(Settings.BOOK_API_MAPPING)
@@ -34,10 +36,14 @@ public class BookController {
     protected final BookService bookService;
     /** The injected recommendation service. */
     protected final RecommendationService recommendationService;
+    /** The injected book text service. */
+    protected final BookTextService bookTextService;
 
-    public BookController(BookService bookService, RecommendationService recommendationService) {
+    public BookController(BookService bookService, RecommendationService recommendationService,
+                          BookTextService bookTextService) {
         this.bookService = bookService;
         this.recommendationService = recommendationService;
+        this.bookTextService = bookTextService;
     }
 
     /**
@@ -70,6 +76,23 @@ public class BookController {
                 .contentType(MediaType.IMAGE_JPEG)
                 .cacheControl(CacheControl.maxAge(Duration.ofDays(1)))
                 .body(new FileSystemResource(cover));
+    }
+
+    /**
+     * Get the text of a book, without the Project Gutenberg header and footer,
+     * so that books can be read even when the Gutenberg website is down.
+     * @param id    The unique Gutenberg book id.
+     * @return      The plain UTF-8 text, cached by the browser for a day.
+     * @throws ResponseStatusException  404 if the book has no stored text.
+     */
+    @GetMapping("/{id}/text")
+    public ResponseEntity<String> getText(@PathVariable int id) {
+        String text = bookTextService.findBodyById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No text for book " + id));
+        return ResponseEntity.ok()
+                .contentType(new MediaType(MediaType.TEXT_PLAIN, StandardCharsets.UTF_8))
+                .cacheControl(CacheControl.maxAge(Duration.ofDays(1)))
+                .body(text);
     }
 
     /**

@@ -118,6 +118,15 @@ export function getBook(id: number, signal?: AbortSignal): Promise<Book> {
   return getJson<Book>(`/api/books/${id}`, signal)
 }
 
+/** Text of a book, without the Project Gutenberg header and footer. */
+export async function getBookText(id: number, signal?: AbortSignal): Promise<string> {
+  const response = await fetch(apiUrl(`/api/books/${id}/text`), { signal })
+  if (!response.ok) {
+    throw new ApiError(response.status, response.status === 404 ? 'No text for this book.' : `Request failed (${response.status})`)
+  }
+  return response.text()
+}
+
 export function getNeighbours(id: number, signal?: AbortSignal): Promise<Book[]> {
   return getJson<Book[]>(`/api/books/${id}/neighbours`, signal)
 }
