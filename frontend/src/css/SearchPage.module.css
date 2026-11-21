@@ -21,6 +21,22 @@
   color: var(--gray-600);
 }
 
+/* phone: smaller title and tighter spacing, so that the home page does not look zoomed in */
+@media (max-width: 40rem) {
+  .home {
+    padding-bottom: 4rem;
+  }
+
+  .homeTitle {
+    font-size: 2.25rem;
+  }
+
+  .tagline {
+    margin: 0.25rem 0 1rem;
+    font-size: 0.8125rem;
+  }
+}
+
 /* ---------- results */
 .main {
   max-width: var(--content-width);

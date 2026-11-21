@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router'
 import styles from './css/App.module.css'
 import BookPage from './pages/BookPage'
+import ReadPage from './pages/ReadPage'
 import SearchPage from './pages/SearchPage'
 
 function NotFound() {
@@ -13,6 +14,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<SearchPage />} />
         <Route path="/book/:id" element={<BookPage />} />
+        <Route path="/book/:id/read" element={<ReadPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

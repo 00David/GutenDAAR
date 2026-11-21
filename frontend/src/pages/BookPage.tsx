@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router'
+import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import {getBook, getNeighbours, type Book, gutenbergBookUrl} from '../api'
 import BookCard from '../components/BookCard'
 import Cover from '../components/Cover'
@@ -97,9 +97,15 @@ function BookDetails({ book }: { book: Book }) {
           <dd>{book.id}</dd>
         </dl>
 
-        <a href={gutenbergBookUrl(book.id)} target="_blank" rel="noreferrer" className={styles.read}>
-          Read on Gutenberg ↗
-        </a>
+        <div className={styles.actions}>
+          {/* served by our backend: works even when the Gutenberg website is down */}
+          <Link to={`/book/${book.id}/read`} className={styles.read}>
+            Read here
+          </Link>
+          <a href={gutenbergBookUrl(book.id)} target="_blank" rel="noreferrer" className={styles.readExternal}>
+            Read on Gutenberg ↗
+          </a>
+        </div>
       </div>
     </article>
   )

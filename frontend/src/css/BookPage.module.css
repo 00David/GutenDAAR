@@ -64,19 +64,39 @@
   color: var(--gray-500);
 }
 
-.read {
-  display: inline-block;
+/* "Read here" (main action) and "Read on Gutenberg" side by side */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-top: 1.25rem;
+}
+
+.read,
+.readExternal {
+  display: inline-block;
   padding: 0.5rem 1rem;
+  border: 1px solid var(--accent);
   border-radius: var(--radius-lg);
-  background: var(--accent);
   font-size: var(--text-sm);
   font-weight: 500;
+}
+
+.read {
+  background: var(--accent);
   color: white;
 }
 
 .read:hover {
   background: var(--accent-hover);
+}
+
+.readExternal {
+  color: var(--accent);
+}
+
+.readExternal:hover {
+  background: var(--accent-50);
 }
 
 /* ---------- similar books: 2 columns on phone, 3 on tablet, 5 on desktop */

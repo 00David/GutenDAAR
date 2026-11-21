@@ -22,7 +22,10 @@
   box-shadow: 0 0 0 2px rgb(37 99 235 / 0.2);
 }
 
+/* by default a dropdown is as wide as its longest option ("RegEx (Full text)") and squeezes the input:
+   it fits the selected option instead */
 .select {
+  field-sizing: content;
   flex-shrink: 0;
   padding: 0 0.5rem;
   border-right: 1px solid var(--gray-200);
@@ -79,6 +82,29 @@ textarea::placeholder {
 
 .large .select {
   font-size: var(--text-base);
+}
+
+/* phone: normal size again, but the input stays at 16px, under which iOS Safari zooms in on focus */
+@media (max-width: 40rem) {
+  .large .input {
+    padding: 0.375rem 0.625rem;
+    font-size: var(--text-base);
+  }
+
+  .large .button {
+    padding: 0 0.75rem;
+    font-size: var(--text-sm);
+  }
+
+  .large .select {
+    padding: 0 0.375rem;
+    font-size: var(--text-sm);
+  }
+
+  .large .ranks {
+    gap: 0.125rem 0.75rem;
+    font-size: var(--text-xs);
+  }
 }
 
 .ranks {
