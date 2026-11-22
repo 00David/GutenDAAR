@@ -47,9 +47,11 @@ public enum RankingMethod {
      * <p>Ties are broken by book id, so that the order (and thus the pagination) is stable.</p>
      *
      * @param postings                      The postings of the keyword (one per book containing it).
-     * @param books                         The books of these postings, by id. Postings whose book is absent are ignored.
+     * @param books                         The books of these postings, by id.
      * @param rankingMethod                 The ranking method, which must be {@link #occurrences}.
      * @return                              A new (modifiable) list of the books, ranked by occurrences.
+     *                                      A posting whose book is absent from {@code books} gives a {@code null}
+     *                                      element, at its rank.
      * @throws IllegalArgumentException     If the ranking method is not {@link #occurrences}:
      *                                      use {@link #sortByCentrality(Collection, RankingMethod)} instead.
      */
