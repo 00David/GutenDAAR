@@ -132,7 +132,18 @@ public class GutenDAARCatalogCSV {
      * @throws IOException      If an error occurs while writing or moving the file.
      */
     protected static void save(List<GutenDAAREntry> entries) throws IOException {
-        Path dir = Settings.CATALOG_CSV_PATH.getParent();
+        save(entries, Settings.CATALOG_CSV_PATH);
+    }
+
+    /**
+     * Save the GutenDAAR catalog at the given path, replacing the existing file if any.
+     * A {@code null} author is written as an empty field.
+     * @param entries           The catalog's entries to save, written in this order.
+     * @param path              The path of the CSV file to write.
+     * @throws IOException      If an error occurs while writing or moving the file.
+     */
+    protected static void save(List<GutenDAAREntry> entries, Path path) throws IOException {
+        Path dir = path.toAbsolutePath().getParent();
         Files.createDirectories(dir);
 
         // write into a temporary file so that a failed save never leaves a truncated catalog
@@ -144,12 +155,12 @@ public class GutenDAARCatalogCSV {
                     printer.printRecord(e.id(), e.title(), e.authors(), e.language(), e.wordCount());
                 }
             }
-            Files.move(tmp, Settings.CATALOG_CSV_PATH, StandardCopyOption.REPLACE_EXISTING);
+            Files.move(tmp, path, StandardCopyOption.REPLACE_EXISTING);
         } finally {
             Files.deleteIfExists(tmp);
         }
 
-        LOG.debug("Saved GutenDAAR catalog at {}, with {} entries.", Settings.CATALOG_CSV_PATH, entries.size());
+        LOG.debug("Saved GutenDAAR catalog at {}, with {} entries.", path, entries.size());
     }
 
     /**
