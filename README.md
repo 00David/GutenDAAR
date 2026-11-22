@@ -5,6 +5,8 @@ Search engine over a library of 1,664 multilingual books from [Project Gutenberg
 Abdullah AL MAMUN  
 David VADIMON  
 
+The report is available [here](Rapport_DAAR_Projet2.pdf) (in french).
+
 ## Main features
 
 - **Keyword search**: books containing a single word, through an inverted index.
@@ -60,7 +62,7 @@ when it restarts.
 
 React 19 + TypeScript, built with Vite, in [frontend/](frontend/).
 
-- Pages: search (`/`) and book (`/book/:id`).
+- Pages: search (`/`), book (`/book/:id`) and reading (`/book/:id/read`).
 - In production, served by nginx ([nginx.conf](frontend/nginx.conf)), which also forwards `/api/` to the backend.
 - Development (Node 24, [pnpm](https://pnpm.io)), with `/api` forwarded to `http://localhost:8080`
   (override with `API_PROXY_TARGET`):
@@ -86,6 +88,7 @@ There you can especially rename `CATALOG_CSV_PATH`'s path to `data/catalog.csv`:
   | `GET /api/search/regex/fulltext`          | RegEx search on the full text             |
   | `GET /api/books/{id}`                     | Book metadata                             |
   | `GET /api/books/{id}/cover`               | Book cover                                |
+  | `GET /api/books/{id}/text`                | Text without Gutenberg header and footer  |
   | `GET /api/books/{id}/neighbours`          | Nearest books in the Jaccard graph        |
 
   Search parameters: `query`, `ranking` (`occurrences`, `pagerank`, `closeness`, `betweenness`),
